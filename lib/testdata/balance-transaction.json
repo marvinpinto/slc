@@ -1,0 +1,51 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "txn_1ITGPQCOCRzw0YkGb7Ib8IvE",
+      "object": "balance_transaction",
+      "amount": -2306,
+      "available_on": 1615507200,
+      "created": 1615338020,
+      "currency": "usd",
+      "description": "STRIPE PAYOUT",
+      "exchange_rate": null,
+      "fee": 0,
+      "fee_details": [
+
+      ],
+      "net": -2306,
+      "reporting_category": "payout",
+      "source": "po_1ITGPQCOCRzw0YkGEIImZLHC",
+      "status": "available",
+      "type": "payout"
+    },
+    {
+      "id": "txn_1IPYeFCOCRzw0YkGcBD2sZOp",
+      "object": "balance_transaction",
+      "amount": 2406,
+      "available_on": 1614988800,
+      "created": 1614454818,
+      "currency": "usd",
+      "description": "Subscription update",
+      "exchange_rate": 1.18307,
+      "fee": 100,
+      "fee_details": [
+        {
+          "amount": 100,
+          "application": null,
+          "currency": "usd",
+          "description": "Stripe processing fees",
+          "type": "stripe_fee"
+        }
+      ],
+      "net": 2306,
+      "reporting_category": "charge",
+      "source": "ch_1IPYeECOCRzw0YkGjpwjmnJR",
+      "status": "available",
+      "type": "charge"
+    }
+  ],
+  "has_more": false,
+  "url": "/v1/balance_transactions"
+}
