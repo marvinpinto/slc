@@ -18,7 +18,7 @@ import (
 	viperlib "github.com/spf13/viper"
 )
 
-func TestStripePayoutDisputes(t *testing.T) {
+func TestStripePayouts(t *testing.T) {
 	type test struct {
 		name                      string
 		skipTest                  bool
@@ -30,6 +30,48 @@ func TestStripePayoutDisputes(t *testing.T) {
 	tests := []test{
 		{
 			name:                      "is able to handle a basic charge (no invoice)",
+			skipTest:                  false,
+			inpPayoutList:             "testdata/bank-payout.json",
+			inpBalanceTransactionList: "testdata/balance-transaction.json",
+			expOutput:                 "testdata/simple-report.ledger",
+		},
+		{
+			name:                      "is able to handle a charges with customer info",
+			skipTest:                  false,
+			inpPayoutList:             "testdata/bank-payout.json",
+			inpBalanceTransactionList: "testdata/charges/with-customer-info.json",
+			expOutput:                 "testdata/charges/with-customer-info.ledger",
+		},
+		{
+			name:                      "is able to handle multi currency payouts",
+			skipTest:                  false,
+			inpPayoutList:             "testdata/bank-payout.json",
+			inpBalanceTransactionList: "testdata/charges/multi-currency.json",
+			expOutput:                 "testdata/charges/multi-currency.ledger",
+		},
+		{
+			name:                      "is able to handle invoices with tax line items",
+			skipTest:                  false,
+			inpPayoutList:             "testdata/bank-payout.json",
+			inpBalanceTransactionList: "testdata/charges/taxed-items.json",
+			expOutput:                 "testdata/charges/taxed-items.ledger",
+		},
+		{
+			name:                      "is able to handle a basic refund",
+			skipTest:                  false,
+			inpPayoutList:             "testdata/bank-payout.json",
+			inpBalanceTransactionList: "testdata/refunds/basic.json",
+			expOutput:                 "testdata/refunds/basic.ledger",
+		},
+		// {
+		// 	name:                      "is able to handle a refund with taxes",
+		// 	skipTest:                  false,
+		// 	inpPayoutList:             "testdata/bank-payout.json",
+		// 	inpBalanceTransactionList: "testdata/refunds/with-taxes.json",
+		// 	expOutput:                 "testdata/refund/with-taxes.ledger",
+		// },
+		{
+			name:                      "is able to handle a lost dispute",
 			skipTest:                  false,
 			inpPayoutList:             "testdata/bank-payout.json",
 			inpBalanceTransactionList: "testdata/disputes/lost.json",
@@ -68,6 +110,8 @@ func TestStripePayoutDisputes(t *testing.T) {
 
 			btArgs := new(form.Values)
 			btArgs.Add("expand[0]", "data.source.invoice")
+			btArgs.Add("expand[1]", "data.source.charge")
+			btArgs.Add("expand[2]", "data.source.charge.balance_transaction")
 			btArgs.Add("payout", "po_1ITGPQCOCRzw0YkGEIImZLHC")
 			stripeBackend.
 				On("CallRaw", "GET", "/v1/balance_transactions", mock.Anything, btArgs, mock.Anything, mock.Anything).

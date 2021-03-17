@@ -163,6 +163,8 @@ func TestGenerateLedgerEntries(t *testing.T) {
 
 			btArgs := new(form.Values)
 			btArgs.Add("expand[0]", "data.source.invoice")
+			btArgs.Add("expand[1]", "data.source.charge")
+			btArgs.Add("expand[2]", "data.source.charge.balance_transaction")
 			btArgs.Add("payout", "po_1ITGPQCOCRzw0YkGEIImZLHC")
 			if tc.inpBTListApiCallErr {
 				stripeBackend.
