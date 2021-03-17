@@ -1,0 +1,405 @@
+{
+  "data": [
+    {
+      "amount": -738,
+      "available_on": 1600992000,
+      "created": 1600823690,
+      "currency": "usd",
+      "exchange_rate": null,
+      "fee": 0,
+      "fee_details": [],
+      "id": "txn_1HUMZKCOCRzw0YkGQuUpmhbP",
+      "net": -738,
+      "object": "balance_transaction",
+      "reporting_category": "payout",
+      "source": {
+        "amount": 738,
+        "arrival_date": 1600819200,
+        "automatic": true,
+        "balance_transaction": "txn_1HUMZKCOCRzw0YkGQuUpmhbP",
+        "created": 1600823690,
+        "currency": "usd",
+        "destination": "ba_1GudjfCOCRzw0YkG4sLGXb2S",
+        "failure_balance_transaction": null,
+        "failure_code": null,
+        "failure_message": null,
+        "id": "po_1HUMZKCOCRzw0YkGio5Z098Z",
+        "livemode": false,
+        "method": "standard",
+        "object": "payout",
+        "original_payout": null,
+        "reversed_by": null,
+        "source_type": "card",
+        "statement_descriptor": null,
+        "status": "paid",
+        "type": "bank_account"
+      },
+      "status": "available",
+      "type": "payout"
+    },
+    {
+      "amount": 791,
+      "available_on": 1600905600,
+      "created": 1600353352,
+      "currency": "usd",
+      "exchange_rate": null,
+      "fee": 53,
+      "fee_details": [
+        {
+          "amount": 53,
+          "application": null,
+          "currency": "usd",
+          "type": "stripe_fee"
+        }
+      ],
+      "id": "txn_1HSODFCOCRzw0YkGlQWTx5xG",
+      "net": 738,
+      "object": "balance_transaction",
+      "reporting_category": "charge",
+      "source": {
+        "amount": 791,
+        "amount_captured": 791,
+        "amount_refunded": 0,
+        "application": null,
+        "application_fee": null,
+        "application_fee_amount": null,
+        "balance_transaction": "txn_1HSODFCOCRzw0YkGlQWTx5xG",
+        "billing_details": {
+          "address": {
+            "city": "Toronto",
+            "country": "CA",
+            "line1": "123 Four Way",
+            "line2": null,
+            "postal_code": "D9D32D",
+            "state": "ON"
+          },
+          "email": "bob.biller@gmail.com",
+          "name": "Bob Biller",
+          "phone": null
+        },
+        "calculated_statement_descriptor": "ACME INC.",
+        "captured": true,
+        "created": 1600353352,
+        "currency": "usd",
+        "customer": "cus_HwBDiqj8nZQwOJ",
+        "destination": null,
+        "dispute": null,
+        "disputed": false,
+        "failure_code": null,
+        "failure_message": null,
+        "fraud_details": {},
+        "id": "ch_1HSODECOCRzw0YkGqaBPWdgt",
+        "invoice": {
+          "account_country": "CA",
+          "account_tax_ids": null,
+          "amount_due": 791,
+          "amount_paid": 791,
+          "amount_remaining": 0,
+          "application_fee_amount": null,
+          "attempt_count": 1,
+          "attempted": true,
+          "auto_advance": false,
+          "billing_reason": "subscription_create",
+          "charge": "ch_1HSODECOCRzw0YkGqaBPWdgt",
+          "collection_method": "charge_automatically",
+          "created": 1600353351,
+          "currency": "usd",
+          "customer": "cus_HwBDiqj8nZQwOJ",
+          "customer_address": {
+            "city": "Toronto",
+            "country": "CA",
+            "line1": "123 Four Way",
+            "line2": null,
+            "postal_code": "D9D32D",
+            "state": "ON"
+          },
+          "customer_email": "bob.biller@gmail.com",
+          "customer_name": "Bob Biller",
+          "customer_phone": null,
+          "customer_shipping": null,
+          "customer_tax_exempt": "none",
+          "customer_tax_ids": [],
+          "default_payment_method": null,
+          "default_source": null,
+          "default_tax_rates": [
+            {
+              "active": true,
+              "country": null,
+              "created": 1594849033,
+              "display_name": "HST",
+              "id": "txr_1H5IHtCOCRzw0YkG3lCHERCW",
+              "inclusive": false,
+              "jurisdiction": "Canada",
+              "livemode": false,
+              "object": "tax_rate",
+              "percentage": 13,
+              "state": null
+            }
+          ],
+          "discount": null,
+          "discounts": [],
+          "due_date": null,
+          "ending_balance": 0,
+          "id": "in_1HSODDCOCRzw0YkGmo7mtQB1",
+          "last_finalization_error": null,
+          "lines": {
+            "data": [
+              {
+                "amount": 700,
+                "currency": "usd",
+                "discount_amounts": [],
+                "discountable": true,
+                "discounts": [],
+                "id": "il_1HSODDCOCRzw0YkG9XwQBELc",
+                "livemode": false,
+                "object": "line_item",
+                "period": {
+                  "end": 1602945351,
+                  "start": 1600353351
+                },
+                "plan": {
+                  "active": true,
+                  "aggregate_usage": null,
+                  "amount": 700,
+                  "amount_decimal": "700",
+                  "billing_scheme": "per_unit",
+                  "created": 1592756671,
+                  "currency": "usd",
+                  "id": "price_1GwVy7COCRzw0YkGgzqDv5K4",
+                  "interval": "month",
+                  "interval_count": 1,
+                  "livemode": false,
+                  "nickname": null,
+                  "object": "plan",
+                  "product": "prod_HTigkf0cTUnAZ5",
+                  "transform_usage": {
+                    "divide_by": 10,
+                    "round": "up"
+                  },
+                  "trial_period_days": null,
+                  "usage_type": "licensed"
+                },
+                "price": {
+                  "active": true,
+                  "billing_scheme": "per_unit",
+                  "created": 1592756671,
+                  "currency": "usd",
+                  "id": "price_1GwVy7COCRzw0YkGgzqDv5K4",
+                  "livemode": false,
+                  "lookup_key": null,
+                  "nickname": null,
+                  "object": "price",
+                  "product": "prod_HTigkf0cTUnAZ5",
+                  "recurring": {
+                    "aggregate_usage": null,
+                    "interval": "month",
+                    "interval_count": 1,
+                    "trial_period_days": null,
+                    "usage_type": "licensed"
+                  },
+                  "transform_quantity": {
+                    "divide_by": 10,
+                    "round": "up"
+                  },
+                  "type": "recurring",
+                  "unit_amount": 700,
+                  "unit_amount_decimal": "700"
+                },
+                "proration": false,
+                "quantity": 10,
+                "subscription": "sub_I2T9ClYNdsL7Sr",
+                "subscription_item": "si_I2T9n1TYsJmphf",
+                "tax_amounts": [
+                  {
+                    "amount": 91,
+                    "inclusive": false,
+                    "tax_rate": "txr_1H5IHtCOCRzw0YkG3lCHERCW"
+                  }
+                ],
+                "tax_rates": [],
+                "type": "subscription"
+              },
+              {
+                "amount": 0,
+                "currency": "usd",
+                "discount_amounts": [],
+                "discountable": true,
+                "discounts": [],
+                "id": "il_1HSODDCOCRzw0YkGPPn0QueS",
+                "livemode": false,
+                "object": "line_item",
+                "period": {
+                  "end": 1602945051,
+                  "start": 1600353351
+                },
+                "plan": {
+                  "active": true,
+                  "aggregate_usage": "sum",
+                  "amount": null,
+                  "amount_decimal": null,
+                  "billing_scheme": "tiered",
+                  "created": 1593970440,
+                  "currency": "usd",
+                  "id": "price_1H1bj2COCRzw0YkGgdZH2mhV",
+                  "interval": "month",
+                  "interval_count": 1,
+                  "livemode": false,
+                  "nickname": null,
+                  "object": "plan",
+                  "product": "prod_HTj0bAAJMgZmEE",
+                  "transform_usage": null,
+                  "trial_period_days": null,
+                  "usage_type": "metered"
+                },
+                "price": {
+                  "active": true,
+                  "billing_scheme": "tiered",
+                  "created": 1593970440,
+                  "currency": "usd",
+                  "id": "price_1H1bj2COCRzw0YkGgdZH2mhV",
+                  "livemode": false,
+                  "lookup_key": null,
+                  "nickname": null,
+                  "object": "price",
+                  "product": "prod_HTj0bAAJMgZmEE",
+                  "recurring": {
+                    "aggregate_usage": "sum",
+                    "interval": "month",
+                    "interval_count": 1,
+                    "trial_period_days": null,
+                    "usage_type": "metered"
+                  },
+                  "transform_quantity": null,
+                  "type": "recurring",
+                  "unit_amount": null,
+                  "unit_amount_decimal": null
+                },
+                "proration": false,
+                "quantity": 0,
+                "subscription": "sub_I2T9ClYNdsL7Sr",
+                "subscription_item": "si_I2T93B9KI8gnLv",
+                "tax_amounts": [
+                  {
+                    "amount": 0,
+                    "inclusive": false,
+                    "tax_rate": "txr_1H5IHtCOCRzw0YkG3lCHERCW"
+                  }
+                ],
+                "tax_rates": [],
+                "type": "subscription"
+              }
+            ],
+            "has_more": false,
+            "object": "list",
+            "total_count": 2
+          },
+          "livemode": false,
+          "next_payment_attempt": null,
+          "number": "A70F985E-0001",
+          "object": "invoice",
+          "on_behalf_of": null,
+          "paid": true,
+          "payment_intent": "pi_1HSODECOCRzw0YkGMtdOaJ0N",
+          "payment_settings": {
+            "payment_method_options": null,
+            "payment_method_types": null
+          },
+          "period_end": 1600353351,
+          "period_start": 1600353351,
+          "post_payment_credit_notes_amount": 0,
+          "pre_payment_credit_notes_amount": 0,
+          "receipt_number": "2294-7843",
+          "starting_balance": 0,
+          "statement_descriptor": null,
+          "status": "paid",
+          "status_transitions": {
+            "finalized_at": 1600353351,
+            "marked_uncollectible_at": null,
+            "paid_at": 1600353351,
+            "voided_at": null
+          },
+          "subscription": "sub_I2T9ClYNdsL7Sr",
+          "subtotal": 700,
+          "tax": 91,
+          "tax_percent": 13,
+          "total": 791,
+          "total_discount_amounts": [],
+          "total_tax_amounts": [
+            {
+              "amount": 91,
+              "inclusive": false,
+              "tax_rate": "txr_1H5IHtCOCRzw0YkG3lCHERCW"
+            }
+          ],
+          "transfer_data": null,
+          "webhooks_delivered_at": 1600353351
+        },
+        "livemode": false,
+        "object": "charge",
+        "on_behalf_of": null,
+        "order": null,
+        "outcome": {
+          "network_status": "approved_by_network",
+          "reason": null,
+          "risk_level": "normal",
+          "risk_score": 14,
+          "seller_message": "Payment complete.",
+          "type": "authorized"
+        },
+        "paid": true,
+        "payment_intent": "pi_1HSODECOCRzw0YkGMtdOaJ0N",
+        "payment_method": "pm_1HSOCfCOCRzw0YkGDkUxlf1g",
+        "payment_method_details": {
+          "card": {
+            "brand": "visa",
+            "checks": {
+              "address_line1_check": "pass",
+              "address_postal_code_check": "pass",
+              "cvc_check": "pass"
+            },
+            "country": "CA",
+            "exp_month": 1,
+            "exp_year": 2055,
+            "fingerprint": "nrUbs2RwA9zFbOVf",
+            "funding": "credit",
+            "installments": null,
+            "last4": "0000",
+            "network": "visa",
+            "three_d_secure": {
+              "authenticated": false,
+              "authentication_flow": null,
+              "result": "attempt_acknowledged",
+              "result_reason": null,
+              "succeeded": true,
+              "version": "1.0.2"
+            },
+            "wallet": null
+          },
+          "type": "card"
+        },
+        "receipt_email": "bob.biller@gmail.com",
+        "receipt_number": "2294-7843",
+        "refunded": false,
+        "refunds": {
+          "data": [],
+          "has_more": false,
+          "object": "list",
+          "total_count": 0
+        },
+        "review": null,
+        "shipping": null,
+        "source": null,
+        "source_transfer": null,
+        "statement_descriptor": null,
+        "statement_descriptor_suffix": null,
+        "status": "succeeded",
+        "transfer_data": null,
+        "transfer_group": null
+      },
+      "status": "available",
+      "type": "charge"
+    }
+  ],
+  "has_more": false,
+  "object": "list"
+}
