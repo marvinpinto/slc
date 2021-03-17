@@ -94,6 +94,8 @@ func (r *Runner) processStripePayout(payout *stripe.Payout) error {
 	params := &stripe.BalanceTransactionListParams{}
 	params.Filters.AddFilter("payout", "", payout.ID)
 	params.AddExpand("data.source.invoice")
+	params.AddExpand("data.source.charge")
+	params.AddExpand("data.source.charge.balance_transaction")
 	i := r.stripeClient.BalanceTransaction.List(params)
 	for i.Next() {
 		bt := i.BalanceTransaction()
@@ -118,7 +120,7 @@ func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, 
 
 	r.logger.Debugf("Processing stripe balance transaction %s. Details: %s", bt.ID, debugObject(bt))
 	if bt.ReportingCategory == "payout" {
-		r.logger.Debugf("Ignoring balance transaction %s as this payout will already be covered in another category", bt.ID)
+		r.logger.Debugf("Ignoring balance transaction %s as this %s will already be covered in another category", bt.ID, bt.ReportingCategory)
 		return nil
 	}
 
@@ -126,12 +128,14 @@ func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, 
 	r.viper.SetDefault("ledger_accounts.income", "Income:Stripe")
 	r.viper.SetDefault("ledger_accounts.stripe_fees", "Expenses:Stripe Fees")
 
-	// TODO: also handle the dispute_reversal, refund, & refund_failure categories
+	// TODO: also handle the dispute_reversal, & refund_failure categories
 	switch bt.ReportingCategory {
 	case "charge":
 		return r.processStripeCharge(bt, payout)
 	case "dispute":
 		return r.processStripeDispute(bt, payout)
+	case "refund":
+		return r.processStripeRefund(bt, payout)
 	default:
 		r.logger.Warnf("This application primarily supports balance transactions associated with payments, and does not support the %s type at the moment. See https://stripe.com/docs/reports/reporting-categories#group-charge_and_payment_related for more information.", bt.ReportingCategory)
 		return nil
