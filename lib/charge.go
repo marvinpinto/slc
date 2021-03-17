@@ -12,9 +12,8 @@ func (r *Runner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stri
 	var ledgerEntry strings.Builder
 
 	ledgerEntry.WriteString(fmt.Sprintf("%s * Stripe Payout\n", r.getFormattedDate(bt.Created)))
-	ledgerEntry.WriteString(fmt.Sprintf("\t; Correlates to Stripe payout %s from %s for amount %s\n", payout.ID, r.getFormattedDate(payout.ArrivalDate), r.getFormattedAmount(payout.Amount, payout.Currency)))
+	ledgerEntry.WriteString(fmt.Sprintf("\t; Correlates to Stripe payout %s from %s for amount %s\n", payout.ID, r.getFormattedDate(payout.ArrivalDate), r.getFormattedAmount(payout.Amount, payout.Currency, false)))
 
-	r.viper.SetDefault("misc.add_customer_metadata", true)
 	addCustMetadata := r.viper.GetBool("misc.add_customer_metadata")
 
 	if addCustMetadata && bt.Source != nil && bt.Source.Charge != nil && bt.Source.Charge.BillingDetails != nil && bt.Source.Charge.BillingDetails.Address != nil {
@@ -34,9 +33,6 @@ func (r *Runner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stri
 			ledgerEntry.WriteString(fmt.Sprintf("\t; CustomerPostalCode: %s\n", bt.Source.Charge.BillingDetails.Address.PostalCode))
 		}
 	}
-
-	r.viper.SetDefault("ledger_accounts.income", "Income:Stripe")
-	r.viper.SetDefault("ledger_accounts.stripe_fees", "Expenses:Stripe Fees")
 
 	bankAcctKey := fmt.Sprintf("ledger_accounts.bank_account_%s", strings.ToLower(payout.Destination.ID))
 	if !r.viper.IsSet(bankAcctKey) {
@@ -61,7 +57,7 @@ func (r *Runner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stri
 				accTaxAmt += normalizedTaxAmt
 			}
 
-			ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t-%s\n", r.viper.GetString(taxRateAcctKey), r.getFormattedAmount(normalizedTaxAmt, bt.Currency)))
+			ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString(taxRateAcctKey), r.getFormattedAmount(normalizedTaxAmt, bt.Currency, true)))
 		}
 	}
 
@@ -70,9 +66,9 @@ func (r *Runner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stri
 		incomeSrc = fmt.Sprintf("%s:Customer-%s", r.viper.Get("ledger_accounts.income"), bt.Source.Charge.Customer.ID)
 	}
 
-	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t-%s\n", incomeSrc, r.getFormattedAmount(bt.Amount-accTaxAmt, bt.Currency)))
-	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString("ledger_accounts.stripe_fees"), r.getFormattedAmount(bt.Fee, bt.Currency)))
-	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString(bankAcctKey), r.getFormattedAmount(bt.Net, bt.Currency)))
+	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", incomeSrc, r.getFormattedAmount(bt.Amount-accTaxAmt, bt.Currency, true)))
+	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString("ledger_accounts.stripe_fees"), r.getFormattedAmount(bt.Fee, bt.Currency, false)))
+	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString(bankAcctKey), r.getFormattedAmount(bt.Net, bt.Currency, false)))
 	fmt.Fprintln(r.outputWriter, ledgerEntry.String())
 
 	return nil

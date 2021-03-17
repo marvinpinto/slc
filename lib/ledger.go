@@ -122,10 +122,16 @@ func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, 
 		return nil
 	}
 
-	// TODO: also handle the dispute, dispute_reversal, refund, & refund_failure categories
+	r.viper.SetDefault("misc.add_customer_metadata", true)
+	r.viper.SetDefault("ledger_accounts.income", "Income:Stripe")
+	r.viper.SetDefault("ledger_accounts.stripe_fees", "Expenses:Stripe Fees")
+
+	// TODO: also handle the dispute_reversal, refund, & refund_failure categories
 	switch bt.ReportingCategory {
 	case "charge":
 		return r.processStripeCharge(bt, payout)
+	case "dispute":
+		return r.processStripeDispute(bt, payout)
 	default:
 		r.logger.Warnf("This application primarily supports balance transactions associated with payments, and does not support the %s type at the moment. See https://stripe.com/docs/reports/reporting-categories#group-charge_and_payment_related for more information.", bt.ReportingCategory)
 		return nil
@@ -137,6 +143,9 @@ func (r *Runner) getFormattedDate(date int64) string {
 	return time.Unix(date, 0).In(loc).Format(r.viper.GetString("date_format_string"))
 }
 
-func (r *Runner) getFormattedAmount(amount int64, currency stripe.Currency) string {
+func (r *Runner) getFormattedAmount(amount int64, currency stripe.Currency, negation bool) string {
+	if negation {
+		amount = amount * -1
+	}
 	return fmt.Sprintf("%.2f %s", float64(amount)/100.0, strings.ToUpper(string(currency)))
 }
