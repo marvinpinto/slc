@@ -1,0 +1,59 @@
+{
+  "data": [
+    {
+      "amount": 4,
+      "available_on": 1610064000,
+      "created": 1609901893,
+      "currency": "usd",
+      "exchange_rate": null,
+      "fee": 0,
+      "fee_details": [],
+      "id": "txn_bbbb",
+      "net": 4,
+      "object": "balance_transaction",
+      "reporting_category": "payout",
+      "source": {
+        "amount": -4,
+        "arrival_date": 1610064000,
+        "automatic": true,
+        "balance_transaction": "txn_bbbb",
+        "created": 1609901893,
+        "currency": "usd",
+        "destination": "ba_1234",
+        "failure_balance_transaction": null,
+        "failure_code": null,
+        "failure_message": null,
+        "id": "po_abcd1234",
+        "livemode": true,
+        "method": "standard",
+        "object": "payout",
+        "original_payout": null,
+        "reversed_by": null,
+        "source_type": "card",
+        "statement_descriptor": null,
+        "status": "paid",
+        "type": "bank_account"
+      },
+      "status": "available",
+      "type": "payout"
+    },
+    {
+      "amount": -4,
+      "available_on": 1609862083,
+      "created": 1609862083,
+      "currency": "usd",
+      "exchange_rate": null,
+      "fee": 0,
+      "fee_details": [],
+      "id": "txn_aaaa",
+      "net": -4,
+      "object": "balance_transaction",
+      "reporting_category": "fee",
+      "source": null,
+      "status": "available",
+      "type": "stripe_fee"
+    }
+  ],
+  "has_more": false,
+  "object": "list"
+}

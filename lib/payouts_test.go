@@ -77,6 +77,13 @@ func TestStripePayouts(t *testing.T) {
 			inpBalanceTransactionList: "testdata/disputes/lost.json",
 			expOutput:                 "testdata/disputes/lost.ledger",
 		},
+		{
+			name:                      "is able to handle stripe account fees",
+			skipTest:                  false,
+			inpPayoutList:             "testdata/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe-fee.json",
+			expOutput:                 "testdata/stripe-fee.ledger",
+		},
 	}
 
 	for _, tc := range tests {

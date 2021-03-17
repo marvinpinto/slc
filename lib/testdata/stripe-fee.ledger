@@ -1,0 +1,5 @@
+2021-01-05 * Stripe Account Fees
+ ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.06 USD
+ Expenses:Stripe Fees  0.04 USD
+ Assets:Bank  -0.04 USD
+
