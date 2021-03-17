@@ -1,0 +1,45 @@
+---
+name: "Tests"
+
+on:
+  push:
+    branches-ignore:
+      - "main"
+
+jobs:
+  gh_tests:
+    runs-on: "ubuntu-latest"
+    env:
+      APP_VERSION: "testing"
+
+    steps:
+      - uses: "actions/checkout@v2"
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - uses: "actions/setup-go@v2.1.3"
+        with:
+          go-version: "1.15.8"
+
+      - name: "Setup/restore Go cache"
+        uses: "actions/cache@v2.1.4"
+        with:
+          # In order:
+          # * Module download cache
+          # * Build cache (Linux)
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: "Linting & Tests"
+        run: |
+          make lint
+          make test-coverage
+
+      - name: "Build the output binaries"
+        run: |
+          make build-all

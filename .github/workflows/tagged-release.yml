@@ -1,0 +1,62 @@
+---
+name: "Tagged Release"
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  gh_tagged_release:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "env: APP_VERSION"
+        run: |
+          ver=${GITHUB_REF/refs\/tags\//}
+          echo "APP_VERSION=${ver}" >> $GITHUB_ENV
+          echo "Set APP_VERSION to: ${ver}"
+
+      - uses: "actions/checkout@v2"
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - uses: "actions/setup-go@v2.1.3"
+        with:
+          go-version: "1.15.8"
+
+      - name: "Setup/restore Go cache"
+        uses: "actions/cache@v2.1.4"
+        with:
+          # In order:
+          # * Module download cache
+          # * Build cache (Linux)
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: "Linting & Tests"
+        run: |
+          make lint
+          make test-coverage
+
+      - name: "Build the output binaries"
+        run: |
+          make build-all
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            dist/**
+
+      - uses: "marvinpinto/action-keybase-notifications@latest"
+        if: always()
+        with:
+          job_status: ${{ job.status }}
+          opensentinel_token: ${{ secrets.OSL_WEBHOOK_TOKEN }}

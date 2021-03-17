@@ -4,9 +4,21 @@ all: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
 
-build:  ## Build the slc binary
-	@echo "Build for Linux x86_64"
-	@GOOS=linux GOARCH=amd64 go build -o ./dist/slc_linux_amd64 -v -ldflags="-X 'main.Version=${APP_VERSION}' -s -w" .
+PLATFORMS := linux/amd64 windows/amd64 darwin/amd64
+temp = $(subst /, ,$@)
+os = $(word 1, $(temp))
+arch = $(word 2, $(temp))
+
+$(PLATFORMS):
+	@GOOS=$(os) GOARCH=$(arch) go build -o './dist/slc_$(os)_$(arch)' -v -ldflags="-X 'github.com/marvinpinto/slc/cmd.Version=${APP_VERSION}' -s -w" .
+	@mv -f ./dist/slc_windows_amd64 ./dist/slc_windows_amd64.exe > /dev/null 2>&1 || true
+
+.PHONY: build-all $(PLATFORMS)
+build-all: $(PLATFORMS)  ## Build the slc binaries
+
+.PHONY: build
+build: ## Build the slc binary
+	@GOOS=linux GOARCH=amd64 go build -o './dist/slc' -v -ldflags="-X 'github.com/marvinpinto/slc/cmd.Version=${APP_VERSION}' -s -w" .
 
 .PHONY: lint
 lint:  ## Rudimentary source code linting
@@ -34,3 +46,13 @@ test:  ## Execute all the unit tests
 .PHONY: test-coverage
 test-coverage: test  ## Execute all the unit tests (with coverage)
 	@go tool cover -func coverage.cov
+
+.PHONY: release
+release: lint test build-all ## Generate a new GitHub tagged release
+ifndef tag
+	@echo 'tag not specified - try: make tag=0.0.1 release'
+	@exit 1
+endif
+	@echo "Creating a new release for: $(tag)"
+	@git tag "$(tag)"
+	@git push origin --tags
