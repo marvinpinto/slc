@@ -136,6 +136,8 @@ func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, 
 		return r.processStripeDispute(bt, payout)
 	case "refund":
 		return r.processStripeRefund(bt, payout)
+	case "fee":
+		return r.processStripeFee(bt, payout)
 	default:
 		r.logger.Warnf("This application primarily supports balance transactions associated with payments, and does not support the %s type at the moment. See https://stripe.com/docs/reports/reporting-categories#group-charge_and_payment_related for more information.", bt.ReportingCategory)
 		return nil

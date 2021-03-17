@@ -104,8 +104,8 @@ func runSLC() error {
 
 	logger.Debug("Initializing Stripe API client")
 	stripe.SetAppInfo(&stripe.AppInfo{
-		Name: "slc",
-		// URL:     "https://github.com/marvinpinto/slc",
+		Name:    "slc",
+		URL:     "https://github.com/marvinpinto/slc",
 		Version: Version,
 	})
 	stripe.DefaultLeveledLogger = slogger
