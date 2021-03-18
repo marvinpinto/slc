@@ -30,8 +30,8 @@ var (
 
 	rootCmd = &cobra.Command{
 		Use:               "slc",
-		Short:             "A CLI client to generate Ledger entries",
-		Long:              "A CLI client to generate Ledger entries - works with Stripe API as well as generic CSV files.",
+		Short:             "A CLI client to generate Ledger accounting entries",
+		Long:              "A CLI client to generate Ledger accounting entries - works with Stripe API as well as generic CSV files.",
 		PersistentPreRun:  appSetup,
 		PersistentPostRun: appTeardown,
 		Version:           Version,
@@ -106,6 +106,9 @@ func appSetup(cmd *cobra.Command, args []string) {
 		var decorCtr decor.Decorator
 		if cmd.Name() == "stripe" {
 			decorName = decor.Name("Processing stripe payouts:", decor.WCSyncSpaceR)
+			decorCtr = decor.OnComplete(decor.Current(0, "# %d", decor.WCSyncWidth), "complete!")
+		} else if cmd.Name() == "csv" {
+			decorName = decor.Name("Processing CSV records:", decor.WCSyncSpaceR)
 			decorCtr = decor.OnComplete(decor.Current(0, "# %d", decor.WCSyncWidth), "complete!")
 		}
 
