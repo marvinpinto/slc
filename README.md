@@ -38,7 +38,42 @@ For charges (and related invoices), it goes through and generates Ledger entries
 
 ## Getting Started
 
-Download a pre-compiled binary from the [releases](https://github.com/marvinpinto/slc/releases) page and save it as `slc` somewhere in your PATH. You will also need your [Stripe API Key](https://stripe.com/docs/keys).
+Download the [latest release](https://github.com/marvinpinto/slc/releases/tag/latest) as a pre-compiled binary and save it somewhere in your PATH. You will also need your [Stripe API Key](https://stripe.com/docs/keys).
+
+<details><summary>Install slc on Linux</summary>
+
+``` bash
+curl -L -o slc "https://github.com/marvinpinto/slc/releases/download/latest/slc_linux_amd64"
+sudo install -o root -g root -m 0755 slc /usr/local/bin/slc
+slc --version
+```
+
+</details>
+
+<details><summary>Install slc on macOS</summary>
+
+``` bash
+curl -L -o slc "https://github.com/marvinpinto/slc/releases/download/latest/slc_darwin_amd64"
+chmod +x ./slc
+sudo mv ./slc /usr/local/bin/slc
+sudo chown root: /usr/local/bin/slc
+slc --version
+```
+
+</details>
+
+<details><summary>Install slc on Windows</summary>
+
+``` bash
+curl -L -o slc.exe "https://github.com/marvinpinto/slc/releases/download/latest/slc_windows_amd64.exe"
+```
+
+Add the `slc.exe` binary somewhere to your PATH, and then verify it:
+``` bash
+slc --version
+```
+
+</details>
 
 Create an empty config file for the program. Among other settings, it will use this config file to save the ID of the last processed payout, so as not to produce duplicate entries.
 
