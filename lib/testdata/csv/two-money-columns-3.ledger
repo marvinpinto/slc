@@ -1,0 +1,20 @@
+2013-11-07 * Bank credit
+    ; Bank credit
+    Assets:Bank123      500.00 GBP
+    Expenses:Unknown    -500.00 GBP
+
+2013-10-09 * Withdrawal
+    ; Withdrawal
+    Assets:Bank123      -20.00 GBP
+    Expenses:Unknown    20.00 GBP
+
+2013-12-09 * Supermarket
+    ; Supermarket
+    Assets:Bank123      -19.77 GBP
+    Expenses:Unknown    19.77 GBP
+
+2013-12-10 * Withdrawal
+    ; ATM Withdrawal 4
+    Assets:Bank123      -100.00 GBP
+    Expenses:Unknown    100.00 GBP
+

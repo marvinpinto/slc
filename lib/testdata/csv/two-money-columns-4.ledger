@@ -1,0 +1,14 @@
+2009-12-24 * Check - 0000000122
+    ; 122
+    Assets:Bank123      -76.00 USD
+    Expenses:Unknown    76.00 USD
+
+2009-12-24 * BLARG R SH 456930
+    Assets:Bank123      327.49 USD
+    Expenses:Unknown    -327.49 USD
+
+2009-12-24 * Check - 0000000112
+    ; 112
+    Assets:Bank123      -800.00 USD
+    Expenses:Unknown    800.00 USD
+
