@@ -55,4 +55,4 @@ ifndef tag
 endif
 	@echo "Creating a new release for: $(tag)"
 	@git tag "$(tag)"
-	@git push origin --tags
+	@git push origin "$(tag)"
