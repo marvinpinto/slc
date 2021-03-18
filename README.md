@@ -112,14 +112,14 @@ ledger_accounts:
   stripe_fees: Expenses:Stripe Fees
   # .. and more
 
-misc:
+stripe:
   # Optionally add your customer's location metadata to your Ledger entries. See
   # the questions section of the README for details.
   add_customer_metadata: true
 
-# This key is used to store the Stripe pagination cursor in order to avoid
-# duplicates.
-most_recently_processed_payout: po_abcd1234
+  # This key is used to store the Stripe pagination cursor in order to
+  # avoid duplicates.
+  most_recently_processed_payout: po_abcd1234
 ```
 
 ## Questions

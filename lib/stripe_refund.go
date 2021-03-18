@@ -8,7 +8,7 @@ import (
 	stripe "github.com/stripe/stripe-go/v72"
 )
 
-func (r *Runner) processStripeRefund(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
+func (r *StripeRunner) processStripeRefund(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
 	var ledgerEntry strings.Builder
 
 	ledgerEntry.WriteString(fmt.Sprintf("%s * Stripe Customer Refund\n", r.getFormattedDate(bt.Created)))

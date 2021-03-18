@@ -8,13 +8,13 @@ import (
 	stripe "github.com/stripe/stripe-go/v72"
 )
 
-func (r *Runner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
+func (r *StripeRunner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
 	var ledgerEntry strings.Builder
 
 	ledgerEntry.WriteString(fmt.Sprintf("%s * Stripe Payout\n", r.getFormattedDate(bt.Created)))
 	ledgerEntry.WriteString(fmt.Sprintf("\t; Correlates to Stripe payout %s from %s for amount %s\n", payout.ID, r.getFormattedDate(payout.ArrivalDate), r.getFormattedAmount(payout.Amount, payout.Currency, false)))
 
-	addCustMetadata := r.viper.GetBool("misc.add_customer_metadata")
+	addCustMetadata := r.viper.GetBool("stripe.add_customer_metadata")
 
 	if addCustMetadata && bt.Source != nil && bt.Source.Charge != nil && bt.Source.Charge.BillingDetails != nil && bt.Source.Charge.BillingDetails.Address != nil {
 		if bt.Source.Charge.BillingDetails.Address.City != "" {
