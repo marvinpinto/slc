@@ -12,7 +12,7 @@ import (
 	stripeClient "github.com/stripe/stripe-go/v72/client"
 )
 
-type Runner struct {
+type StripeRunner struct {
 	stripeClient *stripeClient.API
 	outputWriter io.Writer
 	viper        *viperlib.Viper
@@ -20,8 +20,8 @@ type Runner struct {
 	progressBar  ProgressBar
 }
 
-func NewRunner(sc *stripeClient.API, ow io.Writer, v *viperlib.Viper, l *log.Entry, pb ProgressBar) *Runner {
-	return &Runner{
+func NewStripeRunner(sc *stripeClient.API, ow io.Writer, v *viperlib.Viper, l *log.Entry, pb ProgressBar) *StripeRunner {
+	return &StripeRunner{
 		stripeClient: sc,
 		outputWriter: ow,
 		viper:        v,
@@ -30,19 +30,17 @@ func NewRunner(sc *stripeClient.API, ow io.Writer, v *viperlib.Viper, l *log.Ent
 	}
 }
 
-func (r *Runner) GenerateLedgerEntries() error {
+func (r *StripeRunner) GenerateStripeLedgerEntries() error {
 	params := &stripe.PayoutListParams{}
 	params.Filters.AddFilter("status", "", "paid")
 	params.AddExpand("data.destination")
 
-	cursor := r.viper.GetString("most_recently_processed_payout")
+	cursor := r.viper.GetString("stripe.most_recently_processed_payout")
 	if cursor != "" {
 		params.Filters.AddFilter("starting_after", "", cursor)
 	}
 
-	var numPayouts int = 0
-	var runningTotal int64 = 10
-	r.progressBar.SetTotal(runningTotal, false)
+	var numPayouts int64 = 0
 
 	var mostRecentPayoutDate int64 = 0
 	i := r.stripeClient.Payouts.List(params)
@@ -53,17 +51,11 @@ func (r *Runner) GenerateLedgerEntries() error {
 		p := i.Payout()
 		if p.Created > mostRecentPayoutDate {
 			r.logger.Debugf("Saving payout ID %s as the most recently seen payout", p.ID)
-			r.viper.Set("most_recently_processed_payout", p.ID)
+			r.viper.Set("stripe.most_recently_processed_payout", p.ID)
 		}
 
 		if err := r.processStripePayout(p); err != nil {
 			return err
-		}
-
-		progress := float64(r.progressBar.Current()) / float64(runningTotal)
-		if progress > 0.75 {
-			runningTotal += 5
-			r.progressBar.SetTotal(runningTotal, false)
 		}
 	}
 
@@ -76,12 +68,12 @@ func (r *Runner) GenerateLedgerEntries() error {
 		r.logger.WithError(err).Warn("Unable to update config file. This may result in duplicate transactions in the next run.")
 	}
 
-	r.progressBar.SetTotal(runningTotal, true)
-	fmt.Printf("Successfully processed %d Stripe payouts\n", numPayouts)
+	r.progressBar.SetTotal(numPayouts, true)
+	r.logger.Infof("Successfully processed %d Stripe payouts", numPayouts)
 	return nil
 }
 
-func (r *Runner) processStripePayout(payout *stripe.Payout) error {
+func (r *StripeRunner) processStripePayout(payout *stripe.Payout) error {
 	payoutAmt := float64(payout.Amount) / 100.0
 	r.logger.Debugf("Processing stripe payout %s for %s %.2f, issued at %s (paid out to %s %s)", payout.ID, payout.Currency, payoutAmt, time.Unix(payout.Created, 0), payout.Destination.Type, payout.Destination.ID)
 
@@ -112,7 +104,7 @@ func (r *Runner) processStripePayout(payout *stripe.Payout) error {
 	return nil
 }
 
-func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
+func (r *StripeRunner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
 	// Note: This application only deals with a subset of the possible balance
 	// transactions - primarily associated with payments related reporting
 	// categories. See
@@ -124,7 +116,7 @@ func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, 
 		return nil
 	}
 
-	r.viper.SetDefault("misc.add_customer_metadata", true)
+	r.viper.SetDefault("stripe.add_customer_metadata", true)
 	r.viper.SetDefault("ledger_accounts.income", "Income:Stripe")
 	r.viper.SetDefault("ledger_accounts.stripe_fees", "Expenses:Stripe Fees")
 
@@ -144,12 +136,12 @@ func (r *Runner) processStripeBalanceTransaction(bt *stripe.BalanceTransaction, 
 	}
 }
 
-func (r *Runner) getFormattedDate(date int64) string {
+func (r *StripeRunner) getFormattedDate(date int64) string {
 	loc := time.FixedZone("UTC", 0)
 	return time.Unix(date, 0).In(loc).Format(r.viper.GetString("date_format_string"))
 }
 
-func (r *Runner) getFormattedAmount(amount int64, currency stripe.Currency, negation bool) string {
+func (r *StripeRunner) getFormattedAmount(amount int64, currency stripe.Currency, negation bool) string {
 	if negation {
 		amount = amount * -1
 	}

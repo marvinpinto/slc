@@ -31,58 +31,58 @@ func TestStripePayouts(t *testing.T) {
 		{
 			name:                      "is able to handle a basic charge (no invoice)",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/simple-report.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/simple-report.ledger",
 		},
 		{
 			name:                      "is able to handle a charges with customer info",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/charges/with-customer-info.json",
-			expOutput:                 "testdata/charges/with-customer-info.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/charges/with-customer-info.json",
+			expOutput:                 "testdata/stripe/charges/with-customer-info.ledger",
 		},
 		{
 			name:                      "is able to handle multi currency payouts",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/charges/multi-currency.json",
-			expOutput:                 "testdata/charges/multi-currency.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/charges/multi-currency.json",
+			expOutput:                 "testdata/stripe/charges/multi-currency.ledger",
 		},
 		{
 			name:                      "is able to handle invoices with tax line items",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/charges/taxed-items.json",
-			expOutput:                 "testdata/charges/taxed-items.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/charges/taxed-items.json",
+			expOutput:                 "testdata/stripe/charges/taxed-items.ledger",
 		},
 		{
 			name:                      "is able to handle a basic refund",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/refunds/basic.json",
-			expOutput:                 "testdata/refunds/basic.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/refunds/basic.json",
+			expOutput:                 "testdata/stripe/refunds/basic.ledger",
 		},
 		// {
 		// 	name:                      "is able to handle a refund with taxes",
 		// 	skipTest:                  false,
-		// 	inpPayoutList:             "testdata/bank-payout.json",
-		// 	inpBalanceTransactionList: "testdata/refunds/with-taxes.json",
-		// 	expOutput:                 "testdata/refund/with-taxes.ledger",
+		// 	inpPayoutList:             "testdata/stripe/bank-payout.json",
+		// 	inpBalanceTransactionList: "testdata/stripe/refunds/with-taxes.json",
+		// 	expOutput:                 "testdata/stripe/refund/with-taxes.ledger",
 		// },
 		{
 			name:                      "is able to handle a lost dispute",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/disputes/lost.json",
-			expOutput:                 "testdata/disputes/lost.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/disputes/lost.json",
+			expOutput:                 "testdata/stripe/disputes/lost.ledger",
 		},
 		{
 			name:                      "is able to handle stripe account fees",
 			skipTest:                  false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/stripe-fee.json",
-			expOutput:                 "testdata/stripe-fee.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/stripe-fee.json",
+			expOutput:                 "testdata/stripe/stripe-fee.ledger",
 		},
 	}
 
@@ -145,14 +145,14 @@ func TestStripePayouts(t *testing.T) {
 			var logger = log.WithFields(log.Fields{"name": "slc-testing"})
 			var output bytes.Buffer
 			bar := &StubProgressBar{}
-			runner := NewRunner(sc, &output, v, logger, bar)
+			runner := NewStripeRunner(sc, &output, v, logger, bar)
 
 			expOutput, err := ioutil.ReadFile(tc.expOutput)
 			if err != nil {
 				t.Fatalf("Unable to read expected output file %s", tc.expOutput)
 			}
 
-			result := runner.GenerateLedgerEntries()
+			result := runner.GenerateStripeLedgerEntries()
 			assert.Equal(t, nil, result)
 			assert.Equal(t, string(expOutput), strings.Replace(output.String(), "\t", " ", -1))
 		})

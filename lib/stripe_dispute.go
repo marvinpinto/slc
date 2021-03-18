@@ -7,7 +7,7 @@ import (
 	stripe "github.com/stripe/stripe-go/v72"
 )
 
-func (r *Runner) processStripeDispute(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
+func (r *StripeRunner) processStripeDispute(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
 	var ledgerEntry strings.Builder
 
 	ledgerEntry.WriteString(fmt.Sprintf("%s * Stripe Dispute Charge\n", r.getFormattedDate(bt.Created)))

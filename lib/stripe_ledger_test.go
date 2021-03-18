@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestGenerateLedgerEntries(t *testing.T) {
+func TestGenerateStripeLedgerEntries(t *testing.T) {
 	type test struct {
 		name                      string
 		skipTest                  bool
@@ -55,9 +55,9 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			inpIsQueryCursorPresent:   false,
 			inpPayoutListApiCallErr:   false,
 			inpBTListApiCallErr:       false,
-			inpPayoutList:             "testdata/empty-payload.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/empty-response.ledger",
+			inpPayoutList:             "testdata/stripe/empty-payload.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/empty-response.ledger",
 			expError:                  nil,
 			expSavedCursor:            "",
 		},
@@ -67,9 +67,9 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			inpIsQueryCursorPresent:   true,
 			inpPayoutListApiCallErr:   false,
 			inpBTListApiCallErr:       false,
-			inpPayoutList:             "testdata/empty-payload.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/empty-response.ledger",
+			inpPayoutList:             "testdata/stripe/empty-payload.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/empty-response.ledger",
 			expError:                  nil,
 			expSavedCursor:            "cursor123",
 		},
@@ -79,9 +79,9 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			inpIsQueryCursorPresent:   false,
 			inpPayoutListApiCallErr:   true,
 			inpBTListApiCallErr:       false,
-			inpPayoutList:             "testdata/empty-payload.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/empty-response.ledger",
+			inpPayoutList:             "testdata/stripe/empty-payload.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/empty-response.ledger",
 			expError:                  errors.New("payout API testing error"),
 			expSavedCursor:            "",
 		},
@@ -91,9 +91,9 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			inpIsQueryCursorPresent:   false,
 			inpPayoutListApiCallErr:   false,
 			inpBTListApiCallErr:       false,
-			inpPayoutList:             "testdata/card-payout.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/empty-response.ledger",
+			inpPayoutList:             "testdata/stripe/card-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/empty-response.ledger",
 			expError:                  nil,
 			expSavedCursor:            "po_1ITGPQCOCRzw0YkGEIImZLHC",
 		},
@@ -103,9 +103,9 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			inpIsQueryCursorPresent:   false,
 			inpPayoutListApiCallErr:   false,
 			inpBTListApiCallErr:       true,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/empty-response.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/empty-response.ledger",
 			expError:                  errors.New("balance transaction API testing error"),
 			expSavedCursor:            "",
 		},
@@ -115,9 +115,9 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			inpIsQueryCursorPresent:   false,
 			inpPayoutListApiCallErr:   false,
 			inpBTListApiCallErr:       false,
-			inpPayoutList:             "testdata/bank-payout.json",
-			inpBalanceTransactionList: "testdata/balance-transaction.json",
-			expOutput:                 "testdata/simple-report.ledger",
+			inpPayoutList:             "testdata/stripe/bank-payout.json",
+			inpBalanceTransactionList: "testdata/stripe/balance-transaction.json",
+			expOutput:                 "testdata/stripe/simple-report.ledger",
 			expError:                  nil,
 			expSavedCursor:            "",
 		},
@@ -193,21 +193,21 @@ func TestGenerateLedgerEntries(t *testing.T) {
 			v.AddConfigPath("/")
 			afero.WriteFile(appFs, "/slcconfig.yml", []byte("---"), 0644)
 			if tc.inpIsQueryCursorPresent {
-				afero.WriteFile(appFs, "/slcconfig.yml", []byte("---\nmost_recently_processed_payout: cursor123"), 0644)
+				afero.WriteFile(appFs, "/slcconfig.yml", []byte("---\nstripe:\n  most_recently_processed_payout: cursor123"), 0644)
 			}
 			v.ReadInConfig()
 
 			var logger = log.WithFields(log.Fields{"name": "slc-testing"})
 			var output bytes.Buffer
 			bar := &StubProgressBar{}
-			runner := NewRunner(sc, &output, v, logger, bar)
+			runner := NewStripeRunner(sc, &output, v, logger, bar)
 
 			expOutput, err := ioutil.ReadFile(tc.expOutput)
 			if err != nil {
 				t.Fatalf("Unable to read expected output file %s", tc.expOutput)
 			}
 
-			result := runner.GenerateLedgerEntries()
+			result := runner.GenerateStripeLedgerEntries()
 			assert.Equal(t, tc.expError, result)
 			assert.Equal(t, string(expOutput), strings.Replace(output.String(), "\t", " ", -1))
 
