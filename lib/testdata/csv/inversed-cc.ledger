@@ -1,96 +1,96 @@
 2013-01-17 * VODAFONE PREPAY VISA M AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -30.00 CAD
-    Expenses:Unknown          30.00 CAD
+    Liabilities:Mastercard    -30.0000 CAD
+    Expenses:Unknown           30.0000 CAD
 
 2013-01-18 * WILSON PARKING AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -4.60 CAD
-    Expenses:Unknown          4.60 CAD
+    Liabilities:Mastercard    -4.6000 CAD
+    Expenses:Unknown           4.6000 CAD
 
 2013-01-18 * AUCKLAND TRANSPORT HENDERSON NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -2.00 CAD
-    Expenses:Unknown          2.00 CAD
+    Liabilities:Mastercard    -2.0000 CAD
+    Expenses:Unknown           2.0000 CAD
 
 2013-01-19 * INTERNET PAYMENT RECEIVED
     ; CREDIT
     ; 2226
-    Liabilities:Mastercard    500.00 CAD
-    Expenses:Unknown          -500.00 CAD
+    Liabilities:Mastercard     500.0000 CAD
+    Expenses:Unknown          -500.0000 CAD
 
 2013-01-26 * ITUNES NZ CORK IRL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -64.99 CAD
-    Expenses:Unknown          64.99 CAD
+    Liabilities:Mastercard    -64.9900 CAD
+    Expenses:Unknown           64.9900 CAD
 
 2013-01-26 * VODAFONE FXFLNE BBND R NEWTON NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -90.26 CAD
-    Expenses:Unknown          90.26 CAD
+    Liabilities:Mastercard    -90.2600 CAD
+    Expenses:Unknown           90.2600 CAD
 
 2013-01-29 * PAYMENT RECEIVED THANK YOU
     ; CREDIT
     ; 2101
-    Liabilities:Mastercard    27.75 CAD
-    Expenses:Unknown          -27.75 CAD
+    Liabilities:Mastercard     27.7500 CAD
+    Expenses:Unknown          -27.7500 CAD
 
 2013-01-30 * AUCKLAND TRANSPORT HENDERSON NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -3.50 CAD
-    Expenses:Unknown          3.50 CAD
+    Liabilities:Mastercard    -3.5000 CAD
+    Expenses:Unknown           3.5000 CAD
 
 2013-02-05 * Z BEACH RD AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -129.89 CAD
-    Expenses:Unknown          129.89 CAD
+    Liabilities:Mastercard    -129.8900 CAD
+    Expenses:Unknown           129.8900 CAD
 
 2013-02-05 * TOURNAMENT KHYBER PASS AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -8.00 CAD
-    Expenses:Unknown          8.00 CAD
+    Liabilities:Mastercard    -8.0000 CAD
+    Expenses:Unknown           8.0000 CAD
 
 2013-02-05 * VODAFONE PREPAY VISA M AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -30.00 CAD
-    Expenses:Unknown          30.00 CAD
+    Liabilities:Mastercard    -30.0000 CAD
+    Expenses:Unknown           30.0000 CAD
 
 2013-02-08 * AKLD TRANSPORT PARKING AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -2.50 CAD
-    Expenses:Unknown          2.50 CAD
+    Liabilities:Mastercard    -2.5000 CAD
+    Expenses:Unknown           2.5000 CAD
 
 2013-02-08 * AUCKLAND TRANSPORT HENDERSON NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -3.50 CAD
-    Expenses:Unknown          3.50 CAD
+    Liabilities:Mastercard    -3.5000 CAD
+    Expenses:Unknown           3.5000 CAD
 
 2013-02-12 * AKLD TRANSPORT PARKING AUCKLAND NZL
     ; DEBIT
     ; 2226
-    Liabilities:Mastercard    -1.50 CAD
-    Expenses:Unknown          1.50 CAD
+    Liabilities:Mastercard    -1.5000 CAD
+    Expenses:Unknown           1.5000 CAD
 
 2013-02-17 * INTERNET PAYMENT RECEIVED
     ; CREDIT
     ; 2226
-    Liabilities:Mastercard    12.00 CAD
-    Expenses:Unknown          -12.00 CAD
+    Liabilities:Mastercard     12.0000 CAD
+    Expenses:Unknown          -12.0000 CAD
 
 2013-02-17 * INTERNET PAYMENT RECEIVED
     ; CREDIT
     ; 2226
-    Liabilities:Mastercard    18.00 CAD
-    Expenses:Unknown          -18.00 CAD
+    Liabilities:Mastercard     18.0000 CAD
+    Expenses:Unknown          -18.0000 CAD
 

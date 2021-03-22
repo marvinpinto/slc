@@ -1,24 +1,24 @@
 2021-03-12 * Withdrawal Transfer to acct123
-    Assets:Bank123      -0.01 EUR
-    Expenses:Unknown    0.01 EUR
+    Assets:Bank123      -0.0100 EUR
+    Expenses:Unknown     0.0100 EUR
 
 2021-03-12 * External Deposit Miscellaneous Payments STRIPE ABCD123K8E
-    Assets:Bank123      0.34 EUR
-    Expenses:Unknown    -0.34 EUR
+    Assets:Bank123       0.3400 EUR
+    Expenses:Unknown    -0.3400 EUR
 
 2021-01-31 * Maintenance Service Charge
-    Assets:Bank123      -1.50 EUR
-    Expenses:Unknown    1.50 EUR
+    Assets:Bank123      -1.5000 EUR
+    Expenses:Unknown     1.5000 EUR
 
 2021-01-15 * External Deposit Miscellaneous Payments STRIPE ABCD123J2Q
-    Assets:Bank123      0.35 EUR
-    Expenses:Unknown    -0.35 EUR
+    Assets:Bank123       0.3500 EUR
+    Expenses:Unknown    -0.3500 EUR
 
 2021-01-11 * Withdrawal Transfer to acct123
-    Assets:Bank123      -7.79 EUR
-    Expenses:Unknown    7.79 EUR
+    Assets:Bank123      -7.7900 EUR
+    Expenses:Unknown     7.7900 EUR
 
 2021-01-11 * Withdrawal Transfer to acct123
-    Assets:Bank123      -0.05 EUR
-    Expenses:Unknown    0.05 EUR
+    Assets:Bank123      -0.0500 EUR
+    Expenses:Unknown     0.0500 EUR
 
