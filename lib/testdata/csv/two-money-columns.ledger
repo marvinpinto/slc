@@ -1,24 +1,24 @@
 2008-04-01 * Check - 0000000122
     ; 122
-    Assets:Bank123      -76.00 CAD
-    Expenses:Unknown    76.00 CAD
+    Assets:Bank123      -76.0000 CAD
+    Expenses:Unknown     76.0000 CAD
 
 2008-03-28 * BLARG R SH 456930
-    Assets:Bank123      327.49 CAD
-    Expenses:Unknown    -327.49 CAD
+    Assets:Bank123       327.4900 CAD
+    Expenses:Unknown    -327.4900 CAD
 
 2008-03-27 * Check - 0000000112
     ; 112
-    Assets:Bank123      -800.00 CAD
-    Expenses:Unknown    800.00 CAD
+    Assets:Bank123      -800.0000 CAD
+    Expenses:Unknown     800.0000 CAD
 
 2008-03-26 * Check - 0000000251
     ; 251
-    Assets:Bank123      -88.55 CAD
-    Expenses:Unknown    88.55 CAD
+    Assets:Bank123      -88.5500 CAD
+    Expenses:Unknown     88.5500 CAD
 
 2008-03-26 * Check - 0000000251
     ; 251
-    Assets:Bank123      88.55 CAD
-    Expenses:Unknown    -88.55 CAD
+    Assets:Bank123       88.5500 CAD
+    Expenses:Unknown    -88.5500 CAD
 

@@ -1,6 +1,6 @@
 2021-02-27 * Stripe Payout
-    ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.06 USD
-    Income:Stripe           -24.06 USD
-    Expenses:Stripe Fees    1.00 USD
-    Assets:Bank             23.06 USD
+    ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
+    Income:Stripe           -24.0600 USD
+    Expenses:Stripe Fees      1.0000 USD
+    Assets:Bank              23.0600 USD
 

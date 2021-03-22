@@ -1,5 +1,5 @@
 2012-12-31 * ODESK***BAL-27DEC12 650-12345 CA 12/28
     ; DEBIT
-    Assets:Bank123      -123.45 USD
-    Expenses:Unknown    123.45 USD
+    Assets:Bank123      -123.4500 USD
+    Expenses:Unknown     123.4500 USD
 

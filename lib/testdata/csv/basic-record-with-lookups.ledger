@@ -1,30 +1,30 @@
 2021-03-12 * Cash Transfer
     ; 70.29
-    Assets:BankOfMontreal    -0.01 CAD
-    Assets:Scotiabank        0.01 CAD
+    Assets:BankOfMontreal    -0.0100 CAD
+    Assets:Scotiabank         0.0100 CAD
 
 2021-03-12 * Revenue
     ; 70.30
-    Assets:BankOfMontreal    0.34 CAD
-    Income:Stripe            -0.34 CAD
+    Assets:BankOfMontreal     0.3400 CAD
+    Income:Stripe            -0.3400 CAD
 
 2021-01-31 * Maintenance Service Charge
     ; 69.96
-    Assets:BankOfMontreal    -1.50 CAD
-    Expenses:Unknown         1.50 CAD
+    Assets:BankOfMontreal    -1.5000 CAD
+    Expenses:Unknown          1.5000 CAD
 
 2021-01-15 * Revenue
     ; 71.46
-    Assets:BankOfMontreal    0.35 CAD
-    Income:Stripe            -0.35 CAD
+    Assets:BankOfMontreal     0.3500 CAD
+    Income:Stripe            -0.3500 CAD
 
 2021-01-11 * Cash Transfer
     ; 71.11
-    Assets:BankOfMontreal    -7.79 CAD
-    Assets:Scotiabank        7.79 CAD
+    Assets:BankOfMontreal    -7.7900 CAD
+    Assets:Scotiabank         7.7900 CAD
 
 2021-01-11 * Cash Transfer
     ; 78.90
-    Assets:BankOfMontreal    -0.05 CAD
-    Assets:Scotiabank        0.05 CAD
+    Assets:BankOfMontreal    -0.0500 CAD
+    Assets:Scotiabank         0.0500 CAD
 

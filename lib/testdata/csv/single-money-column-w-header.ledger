@@ -1,8 +1,8 @@
 2012-03-22 * DEPOSIT
-    Assets:Bank123      50.00 EUR
-    Expenses:Unknown    -50.00 EUR
+    Assets:Bank123       50.0000 EUR
+    Expenses:Unknown    -50.0000 EUR
 
 2012-03-23 * TRANSFER TO SAVINGS
-    Assets:Bank123      -10.00 EUR
-    Expenses:Unknown    10.00 EUR
+    Assets:Bank123      -10.0000 EUR
+    Expenses:Unknown     10.0000 EUR
 

@@ -1,11 +1,11 @@
 2021-02-27 * Stripe Payout
-    ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.06 USD
+    ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
     ; CustomerCity: Toronto
     ; CustomerState: ON
     ; CustomerCountry: CA
     ; CustomerPostalCode: M8D9D3
-    Liabilities:SalesTax                         -2.77 USD
-    Income:Stripe:Customer-cus_HueMTwXzJ6NWw2    -21.29 USD
-    Expenses:Stripe Fees                         1.00 USD
-    Assets:Bank                                  23.06 USD
+    Liabilities:SalesTax                          -2.7684 USD
+    Income:Stripe:Customer-cus_HueMTwXzJ6NWw2    -21.2916 USD
+    Expenses:Stripe Fees                           1.0000 USD
+    Assets:Bank                                   23.0600 USD
 

@@ -29,7 +29,7 @@ func NewLedgerTransaction(date time.Time, desc string, lines []TransactionPostin
 		sum.Add(sum, line.Amount)
 	}
 	if !approxEquals(sum, Zero()) {
-		return nil, fmt.Errorf("The items in this ledger transaction appear to be unbalanced. The amounts in these ledger posting should balance out to 0, but results in %.2f instead. Lines: %v", sum, lines)
+		return nil, fmt.Errorf("The items in this ledger transaction appear to be unbalanced. The amounts in these ledger posting should balance out to 0, but results in %.4f instead. Lines: %v", sum, lines)
 	}
 
 	return &LedgerTransaction{
@@ -94,22 +94,28 @@ func (l *LedgerTransaction) String() string {
 		))
 	}
 
-	// Find the length of the longest account name. This will be used as the
-	// printf padding value.
+	// Find the length of the longest account name & longest printed amount.
+	// These will be used to factor in printf padding values
 	var acctStrLen int = 0
+	var amtStrLen int = 0
 	for _, line := range l.lines {
 		if len(line.Account) > acctStrLen {
 			acctStrLen = len(line.Account)
+		}
+
+		if len(fmt.Sprintf("%.4f", line.Amount)) > amtStrLen {
+			amtStrLen = len(fmt.Sprintf("%.4f", line.Amount))
 		}
 	}
 
 	// transaction lines: e.g. Liabilities:SalesTax  -2.82 USD
 	for _, line := range l.lines {
 		res.WriteString(fmt.Sprintf(
-			"%4s%-*s    %.2f %s\n",
+			"%4s%-*s    %*.4f %s\n",
 			"", // indent
 			acctStrLen,
 			line.Account,
+			amtStrLen,
 			line.Amount,
 			strings.ToUpper(line.Currency),
 		))
@@ -125,7 +131,7 @@ func (l *LedgerTransaction) formatDate(date int64) string {
 func (l *LedgerTransaction) formatUnitAmount(amount int64, currency string) string {
 	// amount / 100
 	res := Zero().Quo(Zero().SetInt64(amount), Zero().SetFloat64(100))
-	return fmt.Sprintf("%.2f %s", res, strings.ToUpper(currency))
+	return fmt.Sprintf("%.4f %s", res, strings.ToUpper(currency))
 }
 
 func Zero() *big.Float {
