@@ -4,8 +4,8 @@
     ; CustomerState: ON
     ; CustomerCountry: CA
     ; CustomerPostalCode: M8D9D3
-    Liabilities:SalesTax                          -2.8168 USD
-    Income:Stripe:Customer-cus_HueMTwXzJ6NWw2    -21.6632 USD
-    Expenses:Stripe Fees                           1.0100 USD
-    Assets:Bank                                   23.4700 USD
+    Liabilities:SalesTax     -2.8168 USD
+    Income:Stripe           -21.6632 USD
+    Expenses:Stripe Fees      1.0100 USD
+    Assets:Bank              23.4700 USD
 

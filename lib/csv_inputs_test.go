@@ -15,13 +15,13 @@ import (
 
 func TestCSVInputs(t *testing.T) {
 	type test struct {
-		name             string
-		skipTest         bool
-		inpCSVMapCfg     *csvMappedAcctCfg
-		inpCSVLookupList *[]csvLedgerNameLookup
-		inpCSVData       string
-		expOutput        string
-		expError         error
+		name          string
+		skipTest      bool
+		inpCSVMapCfg  *csvMappedAcctCfg
+		inpLookupList *[]lookupItem
+		inpCSVData    string
+		expOutput     string
+		expError      error
 	}
 
 	tests := []test{
@@ -38,10 +38,10 @@ func TestCSVInputs(t *testing.T) {
 				NoteCols:       []int{3},
 				Currency:       "cad",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/two-money-columns.csv",
-			expOutput:        "testdata/csv/two-money-columns.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/two-money-columns.csv",
+			expOutput:     "testdata/csv/two-money-columns.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "handles single money column with header",
@@ -57,10 +57,10 @@ func TestCSVInputs(t *testing.T) {
 				Currency:       "eur",
 				HeaderRow:      1,
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/single-money-column-w-header.csv",
-			expOutput:        "testdata/csv/single-money-column-w-header.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/single-money-column-w-header.csv",
+			expOutput:     "testdata/csv/single-money-column-w-header.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "handles different date format with notes",
@@ -76,10 +76,10 @@ func TestCSVInputs(t *testing.T) {
 				Currency:       "usd",
 				HeaderRow:      0,
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/full-date-example.csv",
-			expOutput:        "testdata/csv/full-date-example.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/full-date-example.csv",
+			expOutput:     "testdata/csv/full-date-example.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "handles two money columns part 2",
@@ -94,10 +94,10 @@ func TestCSVInputs(t *testing.T) {
 				NoteCols:       []int{2},
 				Currency:       "eur",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/two-money-columns-2.csv",
-			expOutput:        "testdata/csv/two-money-columns-2.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/two-money-columns-2.csv",
+			expOutput:     "testdata/csv/two-money-columns-2.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "handles two money columns part 3",
@@ -112,10 +112,10 @@ func TestCSVInputs(t *testing.T) {
 				NoteCols:       []int{3},
 				Currency:       "gbp",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/two-money-columns-3.csv",
-			expOutput:        "testdata/csv/two-money-columns-3.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/two-money-columns-3.csv",
+			expOutput:     "testdata/csv/two-money-columns-3.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "handles two money columns part 4",
@@ -130,10 +130,10 @@ func TestCSVInputs(t *testing.T) {
 				NoteCols:       []int{3},
 				Currency:       "usd",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/two-money-columns-4.csv",
-			expOutput:        "testdata/csv/two-money-columns-4.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/two-money-columns-4.csv",
+			expOutput:     "testdata/csv/two-money-columns-4.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "handles inversed CC statements",
@@ -148,10 +148,10 @@ func TestCSVInputs(t *testing.T) {
 				NoteCols:       []int{4, 5},
 				Currency:       "cad",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/inversed-cc.csv",
-			expOutput:        "testdata/csv/inversed-cc.ledger",
-			expError:         nil,
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/inversed-cc.csv",
+			expOutput:     "testdata/csv/inversed-cc.ledger",
+			expError:      nil,
 		},
 		{
 			name:     "discards transactions",
@@ -166,7 +166,7 @@ func TestCSVInputs(t *testing.T) {
 				NoteCols:       []int{3},
 				Currency:       "usd",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{
+			inpLookupList: &[]lookupItem{
 				{
 					Search:             "(?i)check.*0000000",
 					AcctName:           "Expenses:Discarded",
@@ -204,7 +204,8 @@ func TestCSVInputs(t *testing.T) {
 			afero.WriteFile(appFs, "/slcconfig.yml", []byte("---"), 0644)
 			v.ReadInConfig()
 			v.Set(csvMappingKeyFullName, tc.inpCSVMapCfg)
-			v.Set("ledger_account_lookups", tc.inpCSVLookupList)
+
+			v.Set("ledger_account_lookups", tc.inpLookupList)
 
 			var logger = log.WithFields(log.Fields{"name": "slc-testing"})
 			var output bytes.Buffer

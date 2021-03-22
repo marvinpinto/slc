@@ -54,9 +54,8 @@ func init() {
 
 func appSetup(cmd *cobra.Command, args []string) {
 	viper = viperlib.New()
-	viper.SetDefault("date_format_string", "2006-01-02")
 
-	if outputFile == "" {
+	if outputFile == "" || verbose {
 		nonInteractive = true
 	}
 

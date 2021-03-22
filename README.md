@@ -2,6 +2,9 @@
 
 `slc` is a CLI application to generate Ledger accounting entries. It works with generic CSV files as well as the Stripe API.
 
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/marvinpinto/slc/Tests/main?style=flat-square)](https://github.com/marvinpinto/slc/actions?query=workflow%3ATests)
+[![Go Report Card](https://goreportcard.com/badge/github.com/marvinpinto/slc?style=flat-square)](https://goreportcard.com/report/github.com/marvinpinto/slc)
+
 ``` bash
 $ slc --help
 A CLI client to generate Ledger accounting entries - works with Stripe API as well as generic CSV files.
@@ -172,15 +175,15 @@ For charges (and related invoices), it goes through and generates Ledger entries
 
 ``` ledger
 2021-02-27 * Stripe Payout
-	; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-09 for amount 23.06 USD
-	; CustomerCity: Toronto
-	; CustomerState: ON
-	; CustomerCountry: CA
-	; CustomerPostalCode: M8D9D3
-	Liabilities:SalesTax		-2.77 USD
-	Income:Stripe:Customer-cus_HueMTwXzJ6NWw2		-21.29 USD
-	Expenses:Stripe Fees		1.00 USD
-	Assets:Bank		23.06 USD
+    ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
+    ; CustomerCity: Toronto
+    ; CustomerState: ON
+    ; CustomerCountry: CA
+    ; CustomerPostalCode: M8D9D3
+    Liabilities:SalesTax     -2.7684 USD
+    Income:Stripe           -21.2916 USD
+    Expenses:Stripe Fees      1.0000 USD
+    Assets:Bank              23.0600 USD
 ```
 
 #### Initial Setup
@@ -200,13 +203,6 @@ slc stripe --config ./config.yml -o stripe.ledger
 #### Configuration Details
 
 ```yaml
-# This is the map containing all your Ledger account names. Whatever values you
-# use here will be the values used in your generated Ledger entries.
-ledger_accounts:
-  income: Income:Stripe
-  stripe_fees: Expenses:Stripe Fees
-  # .. and more
-
 stripe:
   # Optionally add your customer's location metadata to your Ledger entries. See
   # the questions section of the README for details.
