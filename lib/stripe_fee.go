@@ -2,24 +2,27 @@ package lib
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	stripe "github.com/stripe/stripe-go/v72"
 )
 
-func (r *StripeRunner) processStripeFee(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
+func (r *StripeRunner) processStripeFee(bt *stripe.BalanceTransaction, payout *stripe.Payout, lookupList *ledgerAccountLookup) error {
 	var trLines []TransactionPosting
 
-	bankAcctKey := fmt.Sprintf("ledger_accounts.bank_account_%s", strings.ToLower(payout.Destination.ID))
-	if !r.viper.IsSet(bankAcctKey) {
-		r.logger.Warnf("No account map set for %s, using the default value of %s instead", bankAcctKey, "Assets:Bank")
+	bankAcctInfo, err := lookupList.getOrAddItem(payout.Destination.ID, "Assets:Bank")
+	if err != nil {
+		return err
 	}
-	r.viper.SetDefault(bankAcctKey, "Assets:Bank")
+
+	stripeFeesAcctInfo, err := lookupList.getOrAddItem(STRIPE_FEES_LOOKUP_KEY, "Expenses:Stripe Fees")
+	if err != nil {
+		return err
+	}
 
 	// Stripe fees line
 	trLines = append(trLines, TransactionPosting{
-		Account: r.viper.GetString("ledger_accounts.stripe_fees"),
+		Account: stripeFeesAcctInfo.AcctName,
 		// -1 * (bt.Amount / 100)
 		Amount:   Zero().Neg(Zero().Quo(Zero().SetInt64(bt.Amount), Zero().SetFloat64(100))),
 		Currency: string(bt.Currency),
@@ -27,7 +30,7 @@ func (r *StripeRunner) processStripeFee(bt *stripe.BalanceTransaction, payout *s
 
 	// Destination line
 	trLines = append(trLines, TransactionPosting{
-		Account: r.viper.GetString(bankAcctKey),
+		Account: bankAcctInfo.AcctName,
 		// bt.Amount / 100
 		Amount:   Zero().Quo(Zero().SetInt64(bt.Amount), Zero().SetFloat64(100)),
 		Currency: string(bt.Currency),
@@ -40,6 +43,7 @@ func (r *StripeRunner) processStripeFee(bt *stripe.BalanceTransaction, payout *s
 
 	tr.AddComment(fmt.Sprintf("Correlates to Stripe payout %s from %s for amount %s", payout.ID, tr.formatDate(payout.ArrivalDate), tr.formatUnitAmount(payout.Amount, string(payout.Currency))))
 
+	tr.SetDateFormat(r.viper.GetString("date_format_string"))
 	fmt.Fprintln(r.outputWriter, tr.String())
 
 	return nil

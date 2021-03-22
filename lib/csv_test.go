@@ -19,11 +19,11 @@ func TestCSVFlow(t *testing.T) {
 		skipTest               bool
 		inpIsMappingKeyPresent bool
 		inpCSVMapCfg           *csvMappedAcctCfg
-		inpCSVLookupList       *[]csvLedgerNameLookup
+		inpLookupList          *[]lookupItem
 		inpCSVData             string
 		expOutput              string
 		expCSVMapCfg           *csvMappedAcctCfg
-		expCSVLookupList       *[]csvLedgerNameLookup
+		expCSVLookupList       *[]lookupItem
 		expError               error
 	}
 
@@ -145,7 +145,7 @@ func TestCSVFlow(t *testing.T) {
 				NoteCols:       []int{},
 				Currency:       "eur",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{
+			inpLookupList: &[]lookupItem{
 				{
 					Search:   "[0-9]++",
 					AcctName: "Assets:NewBankAccount",
@@ -163,7 +163,7 @@ func TestCSVFlow(t *testing.T) {
 				NoteCols:       []int{},
 				Currency:       "eur",
 			},
-			expCSVLookupList: &[]csvLedgerNameLookup{
+			expCSVLookupList: &[]lookupItem{
 				{
 					Search:   "[0-9]++",
 					AcctName: "Assets:NewBankAccount",
@@ -185,9 +185,9 @@ func TestCSVFlow(t *testing.T) {
 				NoteCols:       []int{},
 				Currency:       "eur",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{},
-			inpCSVData:       "testdata/csv/basic-record.csv",
-			expOutput:        "testdata/csv/basic-record.ledger",
+			inpLookupList: &[]lookupItem{},
+			inpCSVData:    "testdata/csv/basic-record.csv",
+			expOutput:     "testdata/csv/basic-record.ledger",
 			expCSVMapCfg: &csvMappedAcctCfg{
 				LedgerAcctName: "Assets:Bank123",
 				CsvDateFormat:  "2-Jan-2006",
@@ -198,7 +198,7 @@ func TestCSVFlow(t *testing.T) {
 				NoteCols:       []int{},
 				Currency:       "eur",
 			},
-			expCSVLookupList: &[]csvLedgerNameLookup{
+			expCSVLookupList: &[]lookupItem{
 				{
 					Search:      "Withdrawal Transfer to       acct123                                             ",
 					AcctName:    "Expenses:Unknown",
@@ -236,7 +236,7 @@ func TestCSVFlow(t *testing.T) {
 				NoteCols:       []int{7},
 				Currency:       "CAD",
 			},
-			inpCSVLookupList: &[]csvLedgerNameLookup{
+			inpLookupList: &[]lookupItem{
 				{
 					Search:      "(?i)withdrawal.*to.*acct123",
 					AcctName:    "Assets:Scotiabank",
@@ -260,7 +260,7 @@ func TestCSVFlow(t *testing.T) {
 				NoteCols:       []int{7},
 				Currency:       "CAD",
 			},
-			expCSVLookupList: &[]csvLedgerNameLookup{
+			expCSVLookupList: &[]lookupItem{
 				{
 					Search:      "(?i)withdrawal.*to.*acct123",
 					AcctName:    "Assets:Scotiabank",
@@ -309,8 +309,8 @@ func TestCSVFlow(t *testing.T) {
 				v.Set(csvMappingKeyFullName, tc.inpCSVMapCfg)
 			}
 
-			if tc.inpCSVLookupList != nil {
-				v.Set("ledger_account_lookups", tc.inpCSVLookupList)
+			if tc.inpLookupList != nil {
+				v.Set("ledger_account_lookups", tc.inpLookupList)
 			}
 
 			var logger = log.WithFields(log.Fields{"name": "slc-testing"})
@@ -339,7 +339,7 @@ func TestCSVFlow(t *testing.T) {
 			assert.Equal(t, tc.expCSVMapCfg, &mappedCfg)
 
 			if tc.expCSVLookupList != nil {
-				var nameLookupList []csvLedgerNameLookup
+				var nameLookupList []lookupItem
 				err = v.UnmarshalKey("ledger_account_lookups", &nameLookupList)
 				if err != nil {
 					t.Fatalf("Unable to unmarshal config key %s", "ledger_account_lookups")

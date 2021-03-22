@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"math/big"
-	"regexp"
 	"time"
 	"unicode"
 	"unicode/utf8"
@@ -43,18 +42,14 @@ type csvMappedAcctCfg struct {
 	HeaderRow      int    `mapstructure:"header_row"`
 }
 
-type csvLedgerNameLookup struct {
-	Search             string `mapstructure:"search"`
-	AcctName           string `mapstructure:"account_name"`
-	Description        string `mapstructure:"description"`
-	DiscardTransaction bool   `mapstructure:"discard_transaction"`
-}
-
 func (r *CSVRunner) GenerateLedgerEntries(csvStream io.Reader, mappedAcct string) error {
+	var lineCtr int = 0
+
 	defer func() {
 		if err := r.viper.WriteConfig(); err != nil {
 			r.logger.WithError(err).Warn("Unable to update config file. This may result in duplicate transactions in the next run.")
 		}
+		r.progressBar.SetTotal(int64(lineCtr), true)
 	}()
 
 	var mappedCfg csvMappedAcctCfg
@@ -82,26 +77,20 @@ func (r *CSVRunner) GenerateLedgerEntries(csvStream io.Reader, mappedAcct string
 			return nil
 		}
 		r.viper.Set(csvMappedActKey, cfg)
-		r.progressBar.SetTotal(1, true)
 		return nil
 	}
 
-	err := r.viper.UnmarshalKey(csvMappedActKey, &mappedCfg)
-	if err != nil {
+	if err := r.viper.UnmarshalKey(csvMappedActKey, &mappedCfg); err != nil {
 		r.logger.WithError(err).Errorf("Unable to decode configuration key %s", csvMappedActKey)
 		return err
 	}
 	r.logger.Debugf("Decoded config key %s to val: %#v", csvMappedActKey, mappedCfg)
 
-	var nameLookupList []csvLedgerNameLookup
-	err = r.viper.UnmarshalKey("ledger_account_lookups", &nameLookupList)
+	lookupList, err := initializeLookupList(r.logger, r.viper)
 	if err != nil {
-		r.logger.WithError(err).Errorf("Unable to decode configuration key %s", "ledger_account_lookups")
 		return err
 	}
-	r.logger.Debugf("Decoded lookup list key %s to val: %#v", "ledger_account_lookups", nameLookupList)
 
-	var lineCtr int = 0
 	data := csv.NewReader(csvStream)
 	for {
 		lineCtr++
@@ -115,26 +104,22 @@ func (r *CSVRunner) GenerateLedgerEntries(csvStream io.Reader, mappedAcct string
 			return err
 		}
 
-		if err := r.processCSVRecord(record, lineCtr, csvMappedActKey, &mappedCfg, &nameLookupList); err != nil {
+		if err := r.processCSVRecord(record, lineCtr, csvMappedActKey, &mappedCfg, lookupList); err != nil {
 			return err
 		}
 	}
 
 	// Write back the lookup list with any new found values
-	var cfg []map[string]interface{}
-	err = mapstructure.Decode(nameLookupList, &cfg)
-	if err != nil {
-		r.logger.WithError(err).Errorf("Unable to decode mapped configuration key %s", "ledger_account_lookups")
-		return nil
+	if err := lookupList.persistData(); err != nil {
+		r.logger.WithError(err).Errorf("Unable to persist account lookup data key %s", "ledger_account_lookups")
+		return err
 	}
-	r.viper.Set("ledger_account_lookups", cfg)
 
-	r.progressBar.SetTotal(int64(lineCtr), true)
 	r.logger.Debug("CSV processing successful")
 	return nil
 }
 
-func (r *CSVRunner) processCSVRecord(record []string, lineNumber int, mappedKey string, cfg *csvMappedAcctCfg, lookupList *[]csvLedgerNameLookup) error {
+func (r *CSVRunner) processCSVRecord(record []string, lineNumber int, mappedKey string, cfg *csvMappedAcctCfg, lookupList *ledgerAccountLookup) error {
 	r.logger.Debugf("Processing CSV record: %#v Supplied config: %#v", record, cfg)
 
 	if cfg.HeaderRow > 0 && lineNumber == cfg.HeaderRow {
@@ -181,31 +166,13 @@ func (r *CSVRunner) processCSVRecord(record []string, lineNumber int, mappedKey 
 		currency = "eur"
 	}
 
-	var acctLookup *csvLedgerNameLookup
-	for _, val := range *lookupList {
-		matches, err := regexp.MatchString(val.Search, description)
-		if err != nil {
-			return err
-		}
-
-		if matches {
-			acctLookup = &val
-			break
-		}
-	}
-	if acctLookup == nil {
-		acctLookup = &csvLedgerNameLookup{
-			Search:             description,
-			AcctName:           "Expenses:Unknown",
-			Description:        description,
-			DiscardTransaction: false,
-		}
-		r.logger.Debugf("Updating lookup list '%s' with newly found entry %#v", "ledger_account_lookups", acctLookup)
-		*lookupList = append(*lookupList, *acctLookup)
+	acctLookupItem, err := lookupList.getOrAddItem(description, "Expenses:Unknown")
+	if err != nil {
+		return err
 	}
 
-	if acctLookup.DiscardTransaction {
-		r.logger.Debugf("Discarding record %#v as per lookup config %#v", record, acctLookup)
+	if acctLookupItem.DiscardTransaction {
+		r.logger.Debugf("Discarding record %#v as per lookup config %#v", record, acctLookupItem)
 		return nil
 	}
 
@@ -216,7 +183,7 @@ func (r *CSVRunner) processCSVRecord(record []string, lineNumber int, mappedKey 
 			Currency: currency,
 		},
 		{
-			Account:  acctLookup.AcctName,
+			Account:  acctLookupItem.AcctName,
 			Amount:   Zero().Neg(moneyValue),
 			Currency: currency,
 		},
@@ -230,14 +197,14 @@ func (r *CSVRunner) processCSVRecord(record []string, lineNumber int, mappedKey 
 				Currency: currency,
 			},
 			{
-				Account:  acctLookup.AcctName,
+				Account:  acctLookupItem.AcctName,
 				Amount:   moneyValue,
 				Currency: currency,
 			},
 		}
 	}
 
-	tr, err := NewLedgerTransaction(date, acctLookup.Description, transactionLines)
+	tr, err := NewLedgerTransaction(date, acctLookupItem.Description, transactionLines)
 	if err != nil {
 		return err
 	}

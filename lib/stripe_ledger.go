@@ -10,6 +10,9 @@ import (
 	stripeClient "github.com/stripe/stripe-go/v72/client"
 )
 
+const STRIPE_INCOME_SRC_LOOKUP_KEY = "stripe_income_source"
+const STRIPE_FEES_LOOKUP_KEY = "stripe_fees"
+
 type StripeRunner struct {
 	stripeClient *stripeClient.API
 	outputWriter io.Writer
@@ -29,6 +32,15 @@ func NewStripeRunner(sc *stripeClient.API, ow io.Writer, v *viperlib.Viper, l *l
 }
 
 func (r *StripeRunner) GenerateStripeLedgerEntries() error {
+	var numPayouts int64 = 0
+
+	defer func() {
+		if err := r.viper.WriteConfig(); err != nil {
+			r.logger.WithError(err).Warn("Unable to update config file. This may result in duplicate transactions in the next run.")
+		}
+		r.progressBar.SetTotal(numPayouts, true)
+	}()
+
 	params := &stripe.PayoutListParams{}
 	params.Filters.AddFilter("status", "", "paid")
 	params.AddExpand("data.destination")
@@ -37,8 +49,6 @@ func (r *StripeRunner) GenerateStripeLedgerEntries() error {
 	if cursor != "" {
 		params.Filters.AddFilter("starting_after", "", cursor)
 	}
-
-	var numPayouts int64 = 0
 
 	var mostRecentPayoutDate int64 = 0
 	i := r.stripeClient.Payouts.List(params)
@@ -62,11 +72,6 @@ func (r *StripeRunner) GenerateStripeLedgerEntries() error {
 		return err
 	}
 
-	if err := r.viper.WriteConfig(); err != nil {
-		r.logger.WithError(err).Warn("Unable to update config file. This may result in duplicate transactions in the next run.")
-	}
-
-	r.progressBar.SetTotal(numPayouts, true)
 	r.logger.Infof("Successfully processed %d Stripe payouts", numPayouts)
 	return nil
 }
@@ -115,21 +120,39 @@ func (r *StripeRunner) processStripeBalanceTransaction(bt *stripe.BalanceTransac
 	}
 
 	r.viper.SetDefault("stripe.add_customer_metadata", true)
-	r.viper.SetDefault("ledger_accounts.income", "Income:Stripe")
-	r.viper.SetDefault("ledger_accounts.stripe_fees", "Expenses:Stripe Fees")
+
+	lookupList, err := initializeLookupList(r.logger, r.viper)
+	if err != nil {
+		return err
+	}
 
 	// TODO: also handle the dispute_reversal, & refund_failure categories
 	switch bt.ReportingCategory {
 	case "charge":
-		return r.processStripeCharge(bt, payout)
+		if err := r.processStripeCharge(bt, payout, lookupList); err != nil {
+			return err
+		}
 	case "dispute":
-		return r.processStripeDispute(bt, payout)
+		if err := r.processStripeDispute(bt, payout, lookupList); err != nil {
+			return err
+		}
 	case "refund":
-		return r.processStripeRefund(bt, payout)
+		if err := r.processStripeRefund(bt, payout, lookupList); err != nil {
+			return err
+		}
 	case "fee":
-		return r.processStripeFee(bt, payout)
+		if err := r.processStripeFee(bt, payout, lookupList); err != nil {
+			return err
+		}
 	default:
 		r.logger.Warnf("This application primarily supports balance transactions associated with payments, and does not support the %s type at the moment. See https://stripe.com/docs/reports/reporting-categories#group-charge_and_payment_related for more information.", bt.ReportingCategory)
-		return nil
 	}
+
+	// Write back the lookup list with any new found values
+	if err := lookupList.persistData(); err != nil {
+		r.logger.WithError(err).Errorf("Unable to persist account lookup data key %s", "ledger_account_lookups")
+		return err
+	}
+
+	return nil
 }

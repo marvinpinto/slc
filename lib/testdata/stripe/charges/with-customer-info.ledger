@@ -4,8 +4,8 @@
     ; CustomerState: ON
     ; CustomerCountry: CA
     ; CustomerPostalCode: D9D32D
-    Liabilities:SalesTax                         -0.9100 USD
-    Income:Stripe:Customer-cus_HwBDiqj8nZQwOJ    -7.0000 USD
-    Expenses:Stripe Fees                          0.5300 USD
-    Assets:Bank                                   7.3800 USD
+    Liabilities:SalesTax    -0.9100 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5300 USD
+    Assets:Bank              7.3800 USD
 

@@ -4,10 +4,10 @@
     ; CustomerState: ON
     ; CustomerCountry: CA
     ; CustomerPostalCode: L5D9D6
-    Liabilities:SalesTax                          -4.5500 USD
-    Income:Stripe:Customer-cus_HjhXP5q6mBIKbr    -35.0000 USD
-    Expenses:Stripe Fees                           1.4500 USD
-    Assets:Bank                                   38.1000 USD
+    Liabilities:SalesTax     -4.5500 USD
+    Income:Stripe           -35.0000 USD
+    Expenses:Stripe Fees      1.4500 USD
+    Assets:Bank              38.1000 USD
 
 2020-07-29 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -15,10 +15,10 @@
     ; CustomerState: ON
     ; CustomerCountry: CA
     ; CustomerPostalCode: L5D9D6
-    Liabilities:SalesTax                         -0.9100 USD
-    Income:Stripe:Customer-cus_HjhXP5q6mBIKbr    -7.0000 USD
-    Expenses:Stripe Fees                          0.5300 USD
-    Assets:Bank                                   7.3800 USD
+    Liabilities:SalesTax    -0.9100 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5300 USD
+    Assets:Bank              7.3800 USD
 
 2020-07-25 * Stripe Dispute Charge
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -32,9 +32,9 @@
     ; CustomerState: MN
     ; CustomerCountry: US
     ; CustomerPostalCode: 55545
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
 2020-07-25 * Stripe Dispute Charge
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -48,9 +48,9 @@
     ; CustomerState: MN
     ; CustomerCountry: US
     ; CustomerPostalCode: 55545
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -58,9 +58,9 @@
     ; CustomerState: MN
     ; CustomerCountry: US
     ; CustomerPostalCode: 55548
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -73.0000 USD
-    Expenses:Stripe Fees                           2.8600 USD
-    Assets:Bank                                   70.1400 USD
+    Income:Stripe           -73.0000 USD
+    Expenses:Stripe Fees      2.8600 USD
+    Assets:Bank              70.1400 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -68,9 +68,9 @@
     ; CustomerState: ON
     ; CustomerCountry: CA
     ; CustomerPostalCode: KDSDDS
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -53.0000 USD
-    Expenses:Stripe Fees                           2.1600 USD
-    Assets:Bank                                   50.8400 USD
+    Income:Stripe           -53.0000 USD
+    Expenses:Stripe Fees      2.1600 USD
+    Assets:Bank              50.8400 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -78,9 +78,9 @@
     ; CustomerState: DC
     ; CustomerCountry: US
     ; CustomerPostalCode: 20555
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -88,9 +88,9 @@
     ; CustomerState: DC
     ; CustomerCountry: US
     ; CustomerPostalCode: 20555
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -53.0000 USD
-    Expenses:Stripe Fees                           2.1600 USD
-    Assets:Bank                                   50.8400 USD
+    Income:Stripe           -53.0000 USD
+    Expenses:Stripe Fees      2.1600 USD
+    Assets:Bank              50.8400 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -98,16 +98,16 @@
     ; CustomerState: DC
     ; CustomerCountry: US
     ; CustomerPostalCode: 20555
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
 2020-07-25 * Stripe Customer Refund
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
     ; Original Stripe fee: 0.5500 USD
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk     6.4500 USD
-    Expenses:Stripe Fees                          0.0000 USD
-    Assets:Bank                                  -6.4500 USD
+    Income:Stripe            6.4500 USD
+    Expenses:Stripe Fees     0.0000 USD
+    Assets:Bank             -6.4500 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -115,9 +115,9 @@
     ; CustomerState: DC
     ; CustomerCountry: US
     ; CustomerPostalCode: 20555
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
 2020-07-25 * Stripe Dispute Charge
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -131,9 +131,9 @@
     ; CustomerState: VA
     ; CustomerCountry: US
     ; CustomerPostalCode: 23544
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -254.5000 USD
-    Expenses:Stripe Fees                            9.2100 USD
-    Assets:Bank                                   245.2900 USD
+    Income:Stripe           -254.5000 USD
+    Expenses:Stripe Fees       9.2100 USD
+    Assets:Bank              245.2900 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -141,16 +141,16 @@
     ; CustomerState: CA
     ; CustomerCountry: US
     ; CustomerPostalCode: 90210
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
 2020-07-25 * Stripe Customer Refund
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
     ; Original Stripe fee: 0.5500 USD
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk     6.4500 USD
-    Expenses:Stripe Fees                          0.0000 USD
-    Assets:Bank                                  -6.4500 USD
+    Income:Stripe            6.4500 USD
+    Expenses:Stripe Fees     0.0000 USD
+    Assets:Bank             -6.4500 USD
 
 2020-07-25 * Stripe Payout
     ; Correlates to Stripe payout po_1ITGPQCOCRzw0YkGEIImZLHC from 2021-03-10 for amount 23.0600 USD
@@ -158,7 +158,7 @@
     ; CustomerState: CA
     ; CustomerCountry: US
     ; CustomerPostalCode: 90210
-    Income:Stripe:Customer-cus_HU5jthC6A7jlIk    -7.0000 USD
-    Expenses:Stripe Fees                          0.5500 USD
-    Assets:Bank                                   6.4500 USD
+    Income:Stripe           -7.0000 USD
+    Expenses:Stripe Fees     0.5500 USD
+    Assets:Bank              6.4500 USD
 
