@@ -363,9 +363,3 @@ func (r *CSVRunner) parseRawMoneyValue(rawval string, isDebit bool) (*big.Float,
 
 	return f, nil
 }
-
-func Zero() *big.Float {
-	r := big.NewFloat(0.0)
-	r.SetPrec(64)
-	return r
-}

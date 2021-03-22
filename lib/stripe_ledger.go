@@ -1,9 +1,7 @@
 package lib
 
 import (
-	"fmt"
 	"io"
-	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -134,16 +132,4 @@ func (r *StripeRunner) processStripeBalanceTransaction(bt *stripe.BalanceTransac
 		r.logger.Warnf("This application primarily supports balance transactions associated with payments, and does not support the %s type at the moment. See https://stripe.com/docs/reports/reporting-categories#group-charge_and_payment_related for more information.", bt.ReportingCategory)
 		return nil
 	}
-}
-
-func (r *StripeRunner) getFormattedDate(date int64) string {
-	loc := time.FixedZone("UTC", 0)
-	return time.Unix(date, 0).In(loc).Format(r.viper.GetString("date_format_string"))
-}
-
-func (r *StripeRunner) getFormattedAmount(amount int64, currency stripe.Currency, negation bool) string {
-	if negation {
-		amount = amount * -1
-	}
-	return fmt.Sprintf("%.2f %s", float64(amount)/100.0, strings.ToUpper(string(currency)))
 }

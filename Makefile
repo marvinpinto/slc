@@ -41,7 +41,7 @@ update-deps:  ## Update all the package dependencies
 
 .PHONY: test
 test:  ## Execute all the unit tests
-	@go test -race -cover -covermode=atomic -coverprofile coverage.cov ./lib
+	@TZ=UTC go test -race -cover -covermode=atomic -coverprofile coverage.cov ./lib
 
 .PHONY: test-coverage
 test-coverage: test  ## Execute all the unit tests (with coverage)
