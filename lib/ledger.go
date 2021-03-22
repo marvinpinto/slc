@@ -28,7 +28,7 @@ func NewLedgerTransaction(date time.Time, desc string, lines []TransactionPostin
 	for _, line := range lines {
 		sum.Add(sum, line.Amount)
 	}
-	if Zero().Cmp(sum) != 0 {
+	if !approxEquals(sum, Zero()) {
 		return nil, fmt.Errorf("The items in this ledger transaction appear to be unbalanced. The amounts in these ledger posting should balance out to 0, but results in %.2f instead. Lines: %v", sum, lines)
 	}
 
@@ -58,6 +58,14 @@ func (l *LedgerTransaction) AddComment(comment string) {
 	comment = strings.TrimSpace(comment)
 	if comment != "" {
 		l.comments = append(l.comments, comment)
+	}
+}
+
+func (l *LedgerTransaction) AddKeyValComment(key string, val string) {
+	key = strings.TrimSpace(key)
+	val = strings.TrimSpace(val)
+	if key != "" && val != "" {
+		l.comments = append(l.comments, fmt.Sprintf("%s: %s", key, val))
 	}
 }
 
@@ -108,4 +116,33 @@ func (l *LedgerTransaction) String() string {
 	}
 
 	return res.String()
+}
+
+func (l *LedgerTransaction) formatDate(date int64) string {
+	return time.Unix(date, 0).Format(l.dateFormat)
+}
+
+func (l *LedgerTransaction) formatUnitAmount(amount int64, currency string) string {
+	// amount / 100
+	res := Zero().Quo(Zero().SetInt64(amount), Zero().SetFloat64(100))
+	return fmt.Sprintf("%.2f %s", res, strings.ToUpper(currency))
+}
+
+func Zero() *big.Float {
+	r := big.NewFloat(0.0)
+	r.SetPrec(64)
+	return r
+}
+
+func approxEquals(a *big.Float, b *big.Float) bool {
+	tolerance := Zero().SetFloat64(1e-8)
+
+	// delta = abs(a - b)
+	delta := Zero().Abs(Zero().Sub(a, b))
+
+	// delta < tolerance ? true : false
+	if delta.Cmp(tolerance) < 0 {
+		return true
+	}
+	return false
 }

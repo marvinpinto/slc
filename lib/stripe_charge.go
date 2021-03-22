@@ -2,37 +2,14 @@ package lib
 
 import (
 	"fmt"
-	"math"
 	"strings"
+	"time"
 
 	stripe "github.com/stripe/stripe-go/v72"
 )
 
 func (r *StripeRunner) processStripeCharge(bt *stripe.BalanceTransaction, payout *stripe.Payout) error {
-	var ledgerEntry strings.Builder
-
-	ledgerEntry.WriteString(fmt.Sprintf("%s * Stripe Payout\n", r.getFormattedDate(bt.Created)))
-	ledgerEntry.WriteString(fmt.Sprintf("\t; Correlates to Stripe payout %s from %s for amount %s\n", payout.ID, r.getFormattedDate(payout.ArrivalDate), r.getFormattedAmount(payout.Amount, payout.Currency, false)))
-
-	addCustMetadata := r.viper.GetBool("stripe.add_customer_metadata")
-
-	if addCustMetadata && bt.Source != nil && bt.Source.Charge != nil && bt.Source.Charge.BillingDetails != nil && bt.Source.Charge.BillingDetails.Address != nil {
-		if bt.Source.Charge.BillingDetails.Address.City != "" {
-			ledgerEntry.WriteString(fmt.Sprintf("\t; CustomerCity: %s\n", bt.Source.Charge.BillingDetails.Address.City))
-		}
-
-		if bt.Source.Charge.BillingDetails.Address.State != "" {
-			ledgerEntry.WriteString(fmt.Sprintf("\t; CustomerState: %s\n", bt.Source.Charge.BillingDetails.Address.State))
-		}
-
-		if bt.Source.Charge.BillingDetails.Address.Country != "" {
-			ledgerEntry.WriteString(fmt.Sprintf("\t; CustomerCountry: %s\n", bt.Source.Charge.BillingDetails.Address.Country))
-		}
-
-		if bt.Source.Charge.BillingDetails.Address.PostalCode != "" {
-			ledgerEntry.WriteString(fmt.Sprintf("\t; CustomerPostalCode: %s\n", bt.Source.Charge.BillingDetails.Address.PostalCode))
-		}
-	}
+	var trLines []TransactionPosting
 
 	bankAcctKey := fmt.Sprintf("ledger_accounts.bank_account_%s", strings.ToLower(payout.Destination.ID))
 	if !r.viper.IsSet(bankAcctKey) {
@@ -40,7 +17,7 @@ func (r *StripeRunner) processStripeCharge(bt *stripe.BalanceTransaction, payout
 	}
 	r.viper.SetDefault(bankAcctKey, "Assets:Bank")
 
-	var accTaxAmt int64
+	accTaxAmt := Zero()
 	if bt.Source != nil && bt.Source.Charge != nil && bt.Source.Charge.Invoice != nil {
 		for _, taxAmt := range bt.Source.Charge.Invoice.TotalTaxAmounts {
 			taxRateAcctKey := fmt.Sprintf("ledger_accounts.tax_account_%s", strings.ToLower(taxAmt.TaxRate.ID))
@@ -49,27 +26,69 @@ func (r *StripeRunner) processStripeCharge(bt *stripe.BalanceTransaction, payout
 			}
 			r.viper.SetDefault(taxRateAcctKey, "Liabilities:SalesTax")
 
-			normalizedTaxAmt := taxAmt.Amount
+			normalizedTaxAmt := Zero().SetInt64(taxAmt.Amount)
 			if bt.Currency != bt.Source.Charge.Currency {
-				normalizedTaxAmt = int64(math.Round(float64(taxAmt.Amount) * bt.ExchangeRate))
-				accTaxAmt += normalizedTaxAmt
-			} else {
-				accTaxAmt += normalizedTaxAmt
+				// normalizedTaxAmt *= exchange rate
+				normalizedTaxAmt.Mul(normalizedTaxAmt, Zero().SetFloat64(bt.ExchangeRate))
 			}
+			accTaxAmt.Add(accTaxAmt, normalizedTaxAmt)
 
-			ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString(taxRateAcctKey), r.getFormattedAmount(normalizedTaxAmt, bt.Currency, true)))
+			// Tax liability line
+			trLines = append(trLines, TransactionPosting{
+				Account: r.viper.GetString(taxRateAcctKey),
+				// -1 * (normalizedTaxAmt / 100)
+				Amount:   Zero().Neg(Zero().Quo(normalizedTaxAmt, Zero().SetFloat64(100))),
+				Currency: string(bt.Currency),
+			})
 		}
 	}
 
-	incomeSrc := r.viper.Get("ledger_accounts.income")
+	incomeSrc := r.viper.GetString("ledger_accounts.income")
 	if bt.Source != nil && bt.Source.Charge != nil && bt.Source.Charge.Customer != nil {
 		incomeSrc = fmt.Sprintf("%s:Customer-%s", r.viper.Get("ledger_accounts.income"), bt.Source.Charge.Customer.ID)
 	}
 
-	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", incomeSrc, r.getFormattedAmount(bt.Amount-accTaxAmt, bt.Currency, true)))
-	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString("ledger_accounts.stripe_fees"), r.getFormattedAmount(bt.Fee, bt.Currency, false)))
-	ledgerEntry.WriteString(fmt.Sprintf("\t%s\t\t%s\n", r.viper.GetString(bankAcctKey), r.getFormattedAmount(bt.Net, bt.Currency, false)))
-	fmt.Fprintln(r.outputWriter, ledgerEntry.String())
+	// Income source line
+	trLines = append(trLines, TransactionPosting{
+		Account: incomeSrc,
+		// -1 * ((bt.Amount - accTaxAmt)/100)
+		Amount:   Zero().Neg(Zero().Quo(Zero().Sub(Zero().SetInt64(bt.Amount), accTaxAmt), Zero().SetFloat64(100))),
+		Currency: string(bt.Currency),
+	})
+
+	// Stripe fees line
+	trLines = append(trLines, TransactionPosting{
+		Account: r.viper.GetString("ledger_accounts.stripe_fees"),
+		// bt.Fee / 100
+		Amount:   Zero().Quo(Zero().SetInt64(bt.Fee), Zero().SetFloat64(100)),
+		Currency: string(bt.Currency),
+	})
+
+	// Income destination line
+	trLines = append(trLines, TransactionPosting{
+		Account: r.viper.GetString(bankAcctKey),
+		// bt.Net / 100
+		Amount:   Zero().Quo(Zero().SetInt64(bt.Net), Zero().SetFloat64(100)),
+		Currency: string(bt.Currency),
+	})
+
+	tr, err := NewLedgerTransaction(time.Unix(bt.Created, 0), "Stripe Payout", trLines)
+	if err != nil {
+		return err
+	}
+
+	tr.AddComment(fmt.Sprintf("Correlates to Stripe payout %s from %s for amount %s", payout.ID, tr.formatDate(payout.ArrivalDate), tr.formatUnitAmount(payout.Amount, string(payout.Currency))))
+
+	// Ledger transaction comments for customer metadata
+	addCustMetadata := r.viper.GetBool("stripe.add_customer_metadata")
+	if addCustMetadata && bt.Source != nil && bt.Source.Charge != nil && bt.Source.Charge.BillingDetails != nil && bt.Source.Charge.BillingDetails.Address != nil {
+		tr.AddKeyValComment("CustomerCity", bt.Source.Charge.BillingDetails.Address.City)
+		tr.AddKeyValComment("CustomerState", bt.Source.Charge.BillingDetails.Address.State)
+		tr.AddKeyValComment("CustomerCountry", bt.Source.Charge.BillingDetails.Address.Country)
+		tr.AddKeyValComment("CustomerPostalCode", bt.Source.Charge.BillingDetails.Address.PostalCode)
+	}
+
+	fmt.Fprintln(r.outputWriter, tr.String())
 
 	return nil
 }
