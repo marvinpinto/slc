@@ -17,7 +17,7 @@ jobs:
           echo "APP_VERSION=${ver}" >> $GITHUB_ENV
           echo "Set APP_VERSION to: ${ver}"
 
-      - uses: "actions/checkout@v2.3.4"
+      - uses: "actions/checkout@v3.0.0"
         with:
           lfs: true
           fetch-depth: 0
